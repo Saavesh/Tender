@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Room Results
+{% endblock %}
+
+{% block header %}
+    <h1 class="animated-header">🎉 Voting Results 🎉</h1>
+{% endblock %}
+
+{% block content %}
+    <!-- Intro Animation -->
+    <div id="results-intro" class="results-intro">
+        <h2>The results are in...</h2>
+    </div>
+
+    <!-- Winning Restaurant Section -->
+    <div id="results-content" class="results-content hidden">
+        {% if winning_restaurant %}
+            <div class="restaurant-card animated-card">
+                <h3 class="winning-restaurant-name">{{ winning_restaurant.name }}</h3>
+                <img src="{{ winning_restaurant.image_url }}" alt="Restaurant image" style="max-width: 100%; height: auto; border-radius: 8px;">
+                <p>Rating: {{ winning_restaurant.rating }} ({{ winning_restaurant.review_count }} reviews)</p>
+                <p>Price: {{ winning_restaurant.price }}</p>
+                <p>Description:
+                    {% if winning_restaurant.categories %}
+                        {{ winning_restaurant.categories | map(attribute='title') | join(', ') }}
+                    {% else %}
+                        No categories available
+                    {% endif %}
+                </p>
+                <a href="{{ winning_restaurant.url }}" target="_blank" class="view-on-yelp-btn">View on Yelp</a>
+            </div>
+        {% else %}
+            <p>No winning restaurant was found.</p>
+        {% endif %}
+
+        <!-- Voting Summary Section -->
+        <h2 class="animated-subtitle">Voting Summary</h2>
+        <table class="voting-summary-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    {% for restaurant in restaurant_names %}
+                        <th>{{ restaurant }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for user, votes in user_votes.items() %}
+                    <tr>
+                        <td>{{ user }}</td>
+                        {% for restaurant in restaurant_names %}
+                            <td>
+                                {% if restaurant in votes %}
+                                    {% if votes[restaurant] == 1 %}
+                                        Yum
+                                    {% elif votes[restaurant] == 0 %}
+                                        Meh
+                                    {% elif votes[restaurant] == -1 %}
+                                        Ew
+                                    {% endif %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Show intro animation, then reveal the results
+    document.addEventListener('DOMContentLoaded', function () {
+        const intro = document.getElementById('results-intro');
+        const content = document.getElementById('results-content');
+
+        setTimeout(() => {
+            intro.style.display = 'none'; // Hide the intro
+            content.classList.remove('hidden'); // Reveal the results
+        }, 3000); // 3-second delay for intro animation
+    });
+</script>
+{% endblock %}

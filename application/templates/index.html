@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Tender - Find Your Restaurant Match
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    
+    <!-- Left Column: Animated Logo and Text -->
+    <div class="home-left">
+        <div class="home-logo">
+            <video autoplay muted playsinline class="home-logo-video">
+                <source src="{{ url_for('static', filename='videos/ENDER.mp4') }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <h1>Tender</h1>
+        <p>Spend more time connecting with your friends, and less time deciding what to eat.</p>
+        <a href="{{ url_for('start_swiping') }}" class="button-primary">Start Swiping Now!</a>
+    </div>
+
+    <!-- Right Section: Graphic -->
+    <div class="home-right">
+        <img src="{{ url_for('static', filename='images/bnb.png') }}" 
+             alt="Swiping for food graphic" 
+             class="graphic-img">
+    </div>
+</div>
+{% endblock %}

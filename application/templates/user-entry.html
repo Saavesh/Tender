@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Voting Page
+{% endblock %}
+
+{% block header %}
+    <h1>Voting Room</h1>
+    <p>Vote on your favorite restaurant</p>
+    <p>Location: {{ room.Location }}</p>
+{% endblock %}
+
+{% block content %}
+<section class="voting-room">
+    <div class="form-container">
+        <form id="username-form" method="POST" action="/add_guest_user">
+            <div class="form-group">
+                <label for="username-input">How should we refer to you in this voting room?</label>
+                <input type="text" id="username-input" name="Username" required placeholder=" (Your name, alias, or secret identity)">
+                <input type="hidden" name="RoomID" value="{{ room.RoomID }}">
+            </div>
+            <button id="submit-username" type="submit">Submit</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+# macOS system files
+.DS_Store
+
+# VS Code & editor settings
+.vscode/
+
+# Virtual environments
+.venv/       
+venv/ 
+
+# Environment variables
+.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Python cache and instance files
+__pycache__/
+*.pyc
+/instance/
+/application/__pycache__/
+application/site.db
+/instance/site.db
+
+# Build and distribution
+dist/
+build/
+*.egg-info/
+
+# Coverage & test cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Group project deliverables — not for personal GitHub- Refer to README.md for details.
+weekly_status.md
+lab3_documentation/*
+FINAL_REPORT/*
+ERD/*
+
+# Media files
+*.mp4
+*.url

@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block content %}
+    <h1 class="fs-center">Register</h1>
+
+    <!-- Registration Form -->
+    <form action="{{ url_for('security.register') }}" method="POST" name="register_user_form" class="form-container">
+        {{ register_user_form.hidden_tag() }}
+        
+        <!-- Email Field -->
+        <div class="fs-div">
+            {{ register_user_form.email.label }} 
+            {{ register_user_form.email(class="form-input") }}
+            {% for error in register_user_form.email.errors %}
+                <div class="fs-error-msg">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <!-- Password Field -->
+        <div class="fs-div">
+            {{ register_user_form.password.label }} 
+            {{ register_user_form.password(class="form-input") }}
+            {% for error in register_user_form.password.errors %}
+                <div class="fs-error-msg">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <!-- Password Confirmation Field -->
+        <div class="fs-div">
+            {{ register_user_form.password_confirm.label }}
+            {{ register_user_form.password_confirm(class="form-input") }}
+            {% for error in register_user_form.password_confirm.errors %}
+                <div class="fs-error-msg">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="fs-div">
+            <input type="submit" value="Register" class="form-button">
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Account Settings
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="#account-settings">Account Details</a></li>
+            <li><a href="#change-password">Change Password</a></li>
+            <li><a href="#your-rooms">Your Rooms</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="profile-content">
+        <!-- Account Settings Section -->
+        <section id="account-settings">
+            <h1>Account Settings</h1>
+            <form>
+                <!-- Email Address -->
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Email Address">
+                </div>
+
+                <!-- First Name -->
+                <div class="form-group">
+                    <label for="first-name">First Name</label>
+                    <input type="text" id="first-name" name="first-name" placeholder="First Name">
+                </div>
+
+                <!-- Last Name -->
+                <div class="form-group">
+                    <label for="last-name">Last Name</label>
+                    <input type="text" id="last-name" name="last-name" placeholder="Last Name">
+                </div>
+            </form>
+        </section>
+
+        <!-- Change Password Section -->
+        <section id="change-password">
+            <h1>Change Password</h1>
+            <form>
+                <div class="form-group">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password" name="current-password" placeholder="Current Password">
+                </div>
+
+                <div class="form-group">
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password" name="new-password" placeholder="New Password">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm New Password</label>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm New Password">
+                </div>
+
+                <button type="submit" class="button-primary">Save Changes</button>
+            </form>
+        </section>
+
+        <!-- Your Rooms Section -->
+        <section id="your-rooms" class="rooms-section">
+            <h2>Your Rooms</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Link</th>
+                        <th>Location</th>
+                        <th>Winning Restaurant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for room in rooms_data %}
+                    <tr>
+                        <td>{{ room.RoomStatus }}</td>
+                        <td><a href="{{ room.Link }}">View Room</a></td>
+                        <td>{{ room.Location }}</td>
+                        <td>
+                            {% if room.WinningRestaurantName %}
+                            <a href="{{ room.WinningRestaurantURL }}" target="_blank">{{ room.WinningRestaurantName }}</a>
+                            {% else %}
+                            N/A
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+ <!-- Links to Scripts -->
+ {% block scripts %}
+ <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebarLinks = document.querySelectorAll(".sidebar ul li a");
+        
+        sidebarLinks.forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute("href").substring(1); // Get the ID without the "#"
+                const targetSection = document.getElementById(targetId);
+
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: "smooth" });
+                    
+                    // Update active class for the sidebar
+                    sidebarLinks.forEach(link => link.classList.remove("active"));
+                    this.classList.add("active");
+                }
+            });
+        });
+    });
+</script>
+ {% endblock %}

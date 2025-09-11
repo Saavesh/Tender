@@ -1,0 +1,803 @@
+/* ###########################################################################
+   styles.css
+
+   This stylesheet contains all of the CSS styles used in the web application.
+
+   Table of Contents:
+   1. Global Styles         - Basic styles applied across the app
+   2. Header and Navigation - Styles for the header and navigation bar
+   3. Home Page Layout      - Specific styling for the homepage
+   4. Buttons               - Common button styles
+   5. Forms                 - Styling for forms like login and contact
+   6. Tables                - Styles for summary tables to display rooms and results
+   7. Voting Room           - Layout and styles for the voting feature
+   8. Results Page          - Animations and table styling for results
+   9. Flash Messages        - Notifications for errors and successes
+   10. Rooms Overview Page  - Styling for the rooms summary
+   11. Footer               - Footer layout and styling
+########################################################################### */
+
+/* ==========================================================================
+   1. Global Styles - Style for elements like body, links, and media.
+   ========================================================================== */
+html, body {
+    height: 100%; /* full viewport height */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to left, #ff5f6d, #ffc371);/* Gradient background */
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    color: #b03a3a; /* Darker red color on hover */
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    color: #b03a3a; /* Darker red color on hover */
+}
+
+/* user-entry */
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh; /* Adjust for header/footer */
+    padding: 2rem;
+    text-align: center;
+}
+
+main {
+    padding: 2em 1em;
+    text-align: center;
+    flex: 1; /* Fill remaining space */
+}
+
+section h2 {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #b03a3a; /* Darker red color for section headings */
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+
+img, video {
+    max-width: 100%;
+    height: auto;
+}
+
+.animated-logo video {
+    width: 200px; 
+    height: 200px; 
+    border-radius: 100%; /* Circular video */
+    display: block;
+    margin: 0 auto; /* Center horizontally */
+    animation: dropIn 1s ease-out; /*Drop-in animation */
+    margin-bottom: 1rem;
+}
+
+/* Drop-in animation for the video */
+@keyframes dropIn {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ==========================================================================
+   2. Header and Navigation Bar
+   ========================================================================== */
+   header {
+    background-color: #000;
+    color:#fff;
+    padding: 1em 0;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none; /* Remove bullets */
+    list-style: none; /* Remove bullets */
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.5em;
+}
+
+nav ul li a {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1em;
+    font-weight: 600; /* Semi-bold */
+    color: #fff;
+}
+
+/* ==========================================================================
+   3. Home Page Layout - Separate left and right sections for text and graphic
+   ========================================================================== */
+
+.home-container {
+    display: flex;
+    justify-content: center; /* Center both sections */
+    align-items: center; /* Vertically align them */
+    min-height: 100vh; /* Full viewport height */
+    gap: 1rem; /* Reduce gap between text and graphic */
+    flex-wrap: wrap; /* Stack sections on smaller screens */
+}
+
+/* Left side of the homepage */
+.home-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 450px; /* Reduce max width for better alignment */
+    text-align: left;
+}
+
+.home-left h1 {
+    font-size: 5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.home-left p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Right side of the homepage */
+.home-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 400px; /* Limit the graphic size */
+}
+
+.graphic-img {
+    max-width: 90%; /* Shrink slightly for balance */
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.home-logo video {
+    width: 200px; /* Keep consistent with graphic size */
+    height: 200px;
+    border-radius: 70%;
+    animation: dropIn 1s ease-out;
+}
+
+/* ==========================================================================
+   . Buttons - Separate left and right sections for text and graphic
+   ========================================================================== */
+.button-primary {
+    align-self: flex-start;
+    padding: 0.8rem 2rem;
+    background: linear-gradient(to right, #ff6f61, #ff3d3d);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button-primary:hover {
+    background: linear-gradient(to right, #ff3d3d, #b03a3a);
+    transform: translateY(-3px);
+}
+
+.view-on-yelp-btn {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.8rem 1.5rem;
+    background-color: #333;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.view-on-yelp-btn:hover {
+    background-color: #ff6f61;
+    transform: translateY(-5px);
+}
+
+.start_swipe-button {
+    display: inline-block;
+    margin: 20px auto;
+    padding: 12px 25px;
+    background-color: #ff6b6b;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.start_swipe-button:hover {
+    background-color: #ff4040;
+    transform: translateY(-2px);
+}
+
+.start_swipe-button:active {
+    transform: translateY(0);
+}
+
+.create-room-btn {
+    display: inline-block;
+    padding: 1.2rem 3rem; /* Bigger padding for larger button */
+    font-size: 1.2rem; /* Larger text */
+    font-weight: bold;
+    background: linear-gradient(to right, #ff6f61, #ff3d3d);
+    color: white;
+    border: none;
+    border-radius: 50px; /* Circular edges */
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.create-room-btn:hover {
+    background: linear-gradient(to right, #ff3d3d, #b03a3a);
+    transform: scale(1.05); /* Slight enlargement */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+}
+
+.create-room-btn:active {
+    transform: scale(1);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ---------------------------------------------------------------- */
+/* 5. Forms                                                */
+/* ---------------------------------------------------------------- */
+form {
+    max-width: 500px;
+    margin: 2em auto;
+    padding: 1em;
+    background-color: rgba(255, 255, 255, 0.2); /* Light background for the form */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.form-container .form-group {
+    margin-bottom: 1.5em;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 0.5em;
+    color: #333;
+    font-weight: bold;
+}
+
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="password"],
+.form-container textarea {
+    width: 100%;
+    padding: 0.8em;
+    margin-bottom: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+.form-container button {
+    display: block;
+    width: 100%;
+    padding: 1em;
+    font-size: 1.1em;
+    background-color: #ff6f61;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: 1em;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.form-container button:hover {
+    background-color: #b03a3a; /* just in case gradient doesnt work */
+    background: linear-gradient(to right, #ff3d3d, #b03a3a);
+}
+
+.form-container input:focus,
+.form-container textarea:focus {
+    outline: none;
+    border-color: #ff6f61;
+}
+
+
+/* ---------------------------------------------------------------- */
+/* 6. Tables                                          */
+/* ---------------------------------------------------------------- */
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.summary-table th {
+    background: #ff6f61;
+    color: white;
+    text-transform: uppercase;
+    padding: 1rem;
+    text-align: left;
+}
+
+.summary-table td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.summary-table td a {
+    color: #ff6f61;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.summary-table td a:hover {
+    text-decoration: underline;
+}
+
+/* ---------------------------------------------------------------- */
+/* 7. Profile Page                                              */
+/* ---------------------------------------------------------------- */
+.profile-container {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Sidebar */
+.sidebar {
+    background: #2c2c2c; /* Dark gray */
+    padding: 1.5rem;
+    border-radius: 10px;
+    width: 250px;
+    height: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 2rem ;
+}
+
+.sidebar ul li a {
+    display: block;
+    text-decoration: none;
+    color: #ffc371; /* Light orange */
+    font-weight: 600;
+    padding: 1.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+    background: #ffc371; /* Light orange background on hover */
+    color: #2c2c2c;
+}
+
+/* Sidebar Active Link */
+.sidebar ul li a.active {
+    background: #ff6f61; /* Highlight active link */
+    color: white; /* White text for active link */
+}
+
+.profile-content {
+    flex: 1;
+    background: #f9f9f9; /* Light gray */
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-content h1 {
+    font-size: 2rem;
+    color: #b03a3a;
+
+}
+
+/* Form Styling */
+.profile-content form {
+    display: flex;
+    flex-direction: column;
+    gap:.5rem; /* Reduced gap between fields */
+}
+
+.profile-content .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem; /* Less vertical spacing */
+}
+
+.profile-content .form-group label {
+    margin-bottom: 0.3rem; /* Tighter spacing between label and input */
+    font-weight: bold;
+}
+
+.profile-content .form-group input {
+    padding: 0.6rem; /* Slightly smaller padding inside input fields */
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Reduce spacing above "Change Password" heading */
+.profile-content h2 {
+    font-size: 1.5rem;
+    margin-top: 1rem; /* Closer spacing */
+    color: #b03a3a;
+}
+
+/* Rooms section within Profile Page and Results Table */
+.rooms-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.rooms-section td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.rooms-section th {
+    background: #ff6f61;
+    color: white;
+    text-transform: uppercase;
+}
+
+.rooms-section td a {
+    color: #ff6f61;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+/* ---------------------------------------------------------------- */
+/* 8. Voting Room                                                     */
+/* ---------------------------------------------------------------- */
+.voting-room {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 0px;
+    width: 100%;
+}
+
+/* User avatars in a row */
+.user-row {
+    display: flex;
+    justify-content: center;
+    gap: 0px;
+    margin-bottom: .5em;
+    padding: 0;
+    list-style-type: none;
+}
+
+/* Circular user avatar styling */
+.user-avatar {
+    background-color: #222;
+    color: #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* User avatar styling when finished voting */
+.user-avatar-done {
+    background-color: #4CAF50; /* Green to  */
+    border: 2px solid #388E3C; 
+}
+
+.user-avatar:hover {
+    transform: scale(1.1); /* Slight hover effect */
+}
+
+#current-user {
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    margin: auto;
+}
+
+/* Main user avatar inside restaurant info */
+#main_user {
+    margin: 10px auto 0 auto; /* Center the avatar horizontally */
+    background-color: #222;
+    color: #fff;
+    border-radius: 50%;
+    width: 80px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    font-size: 0.9em;
+}
+
+
+/* Restaurant Info Card - Tinder Style */
+.restaurant-info {
+    background: #fff;
+    border-radius: 20px;
+    padding: 1em;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 400px;
+    margin: 1em 0;
+}
+
+.restaurant-info img {
+    max-width: 100%;
+    height: 300px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    width: 100%;
+    object-fit: cover; /* Maintain aspect ratio */
+}
+
+.restaurant-info h3 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5em;
+}
+
+.restaurant-info p {
+    font-size: 1rem;
+    color: #555;
+    margin: 0.5em 0;
+}
+
+/* Styling for Vote Buttons */
+.vote-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Spacing between buttons */
+    margin-top: 20px;
+}
+
+.vote-btn {
+    width: 60px; /* Make the buttons round */
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%; /* Round shape */
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff; /* Text color */
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+/* Button Colors */
+.vote-btn.yum {
+    background-color: #4CAF50; /* Green */
+}
+
+.vote-btn.ew {
+    background-color: #F44336; /* Red */
+}
+
+.vote-btn.meh {
+    background-color: #9E9E9E; /* Gray */
+}
+
+/* Button Hover Effects */
+.vote-btn:hover {
+    transform: scale(1.1); /* Enlarge on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Increase shadow on hover */
+}
+
+.vote-btn:active {
+    transform: scale(0.95); /* Shrink slightly on click */
+    box-shadow: none; /* Remove shadow on click */
+}
+
+
+/* ---------------------------------------------------------------- */
+/* 9. Results Page  */
+/* ---------------------------------------------------------------- */
+
+/* Intro Animation */
+.results-intro {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    margin: 2rem 0;
+    animation: fadeInOut 3s forwards;
+}
+
+/* Fade In and Out */
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Hide Content Initially */
+.hidden {
+    display: none;
+}
+
+/* Animated Header */
+.animated-header {
+    font-size: 2.5rem;
+    text-align: center;
+    animation: popIn 1s ease-in-out forwards, bounce 1.5s infinite alternate;
+    margin-bottom: 1rem;
+}
+
+/* Animated Winning Restaurant Card */
+.animated-card {
+    margin: 2rem auto;
+    max-width: 600px;
+    padding: 1.5rem;
+    background: linear-gradient(to bottom, #ff5f6d, #ffc371);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    animation: slideIn 1s ease-out forwards;
+    text-align: center;
+    color: white;
+}
+
+/* Slide-in Animation */
+@keyframes slideIn {
+    0% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Winning Restaurant Name */
+.winning-restaurant-name {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    animation: fadeIn 2s ease-out forwards;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+
+/* ---------------------------------------------------------------- */
+/* 10. Flash Messages                                 
+/* ---------------------------------------------------------------- */
+.flashes {
+    margin: 0.5em auto; /* Smaller margin */
+    padding: 0.8em; /* Reduce padding */
+    max-width: 500px; /* Slightly narrower width */
+    border-radius: 6px; /* Subtler rounding */
+    font-size: 1em; /* Slightly smaller text */
+    font-weight: 500; /* Medium weight */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    text-align: center;
+    background: linear-gradient(to right, #ffedec, #ffe7e4); /* Light gradient */
+}
+
+.flashes .success {
+    background-color: #ffe8d8; /* Softer background for success */
+    color: #b23c17; /* Deeper, softer red */
+    border: 1px solid #ffc4b0; /* Subtle border */
+}
+
+.flashes .error {
+    background-color: #ffe5e6; /* Softer error background */
+    color: #b00020; /* Subtle error red */
+    border: 1px solid #ffa0a4; /* Subtle error border */
+}
+
+/* Icons: smaller and aligned */
+.flashes li {
+    display: flex;
+    align-items: center;
+    padding: 0.3em; /* Tighter padding for list items */
+}
+
+.flashes li::before {
+    content: '✓'; /* Checkmark for success */
+    margin-right: 0.3em;
+    font-size: 1.2em; /* Smaller icons */
+    color: inherit;
+}
+
+.flashes .error::before {
+    content: '⚠️'; /* Warning for error */
+    color: inherit;
+}
+
+/* ---------------------------------------------------------------- */
+/* 11. Footer                                                    */
+/* ---------------------------------------------------------------- */
+footer {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8em; /* Smaller text for the footer */
+    color: #f5f5f5; 
+    background-color: #111;
+    text-align: center;
+    padding: 1em 0;
+}

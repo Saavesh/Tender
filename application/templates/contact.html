@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    Contact Us - Tender
+{% endblock %}
+
+
+{% block header %}
+        <h1>Contact Us</h1>
+        <p>If you have any questions or feedback, feel free to reach out to us below.</p>
+{% endblock %}
+
+
+    <!-- Main Content Section -->
+{% block content %}
+    <form action="{{ url_for('contact') }}" method="post" class="form-container">
+        <div class="form-group">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" name="email" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+            <label for="message">Your Message:</label>
+            <textarea id="message" name="message" class="form-input" rows="5" required></textarea>
+        </div>
+
+        <button type="submit" class="form-button button-primary">Send Message</button>
+    </form>
+{% endblock %}
