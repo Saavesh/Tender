@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="img/tender_logo.png" alt="Tender Logo" width="120" style="border-radius: 50%;">
+  <img src="application/static/images/tender_logo.png" alt="Tender Logo" width="120" style="border-radius: 50%;">
 </p>
 
 # Tender
@@ -29,3 +29,7 @@ Tender is a web-based app where users log in with a group of people (or just one
 
 ### Acknowledgments
 This app started as a group project at CU Boulder in our web development course. The original version was built with a great team of classmates who helped turn this silly idea into something real. While this version is a personal continuation, I’m grateful for my teammates’ contributions and for making the process genuinely fun to be part of.
+
+----
+### Demo
+Link to be directed to the app on Render: [https://tender-g7nq.onrender.com/](https://tender-g7nq.onrender.com/)
