@@ -1,50 +1,52 @@
 # application/__init__.py
+
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_security import Security, SQLAlchemyUserDatastore
-from flask_caching import Cache
+from dotenv import load_dotenv
+import logging
+from logging import StreamHandler
 import os
 
-# Initialize extensions so they can be imported by other files
-db = SQLAlchemy()
-security = Security()
-cache = Cache()
+from .extensions import db, cache, migrate, security  # <-- from new file
 
-def create_app():
-    """Construct the core application."""
-    app = Flask(__name__, instance_relative_config=False)
+def create_app(testing=False):
+    load_dotenv()
+    app = Flask(__name__)
+    if testing:
+        app.config["TESTING"] = True
 
-    # Load configuration from environment variables
-    app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", 'a-default-secret-key-for-dev')
-    app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT", 'a-default-salt-for-dev')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../instance/site.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
-    # Flask-Security-Too configurations
-    app.config['SECURITY_REGISTERABLE'] = True
-    app.config['SECURITY_PASSWORD_HASH'] = 'argon2'
-    app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
-    app.config['SECURITY_CHANGEABLE'] = True
-    app.config['WTF_CSRF_ENABLED'] = False # Recommended to set to True for production
-    
-    # Flask-Caching configuration
-    app.config['CACHE_TYPE'] = 'SimpleCache'
-    app.config['CACHE_DEFAULT_TIMEOUT'] = 3600 # Cache for 1 hour
+    app.config.from_mapping(
+        SECRET_KEY=os.getenv("SECRET_KEY"),
+        SQLALCHEMY_DATABASE_URI=os.getenv("SQLALCHEMY_DATABASE_URI"),
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        SECURITY_PASSWORD_SALT=os.getenv("SECURITY_PASSWORD_SALT"),
+        SECURITY_PASSWORD_HASH="bcrypt",
+        SECURITY_REGISTERABLE=True,
+        CACHE_TYPE="SimpleCache",
+        CACHE_DEFAULT_TIMEOUT=300,
+    )
 
-    # Initialize extensions with the app instance
+    # Bind extensions to app
     db.init_app(app)
+    migrate.init_app(app, db)
     cache.init_app(app)
 
-    with app.app_context():
-        # Import parts of our application
-        from . import routes
-        from . import models
+    from .routes import register_routes
+    register_routes(app)
 
-        # Setup Flask-Security
-        user_datastore = SQLAlchemyUserDatastore(db, models.User, models.Role)
+    with app.app_context():
+        from .models import User, Role
+        from flask_security import SQLAlchemyUserDatastore
+        user_datastore = SQLAlchemyUserDatastore(db, User, Role)
         security.init_app(app, user_datastore)
 
-        # Create database tables for our models
-        db.create_all()
+        if not app.debug:
+            handler = StreamHandler()
+            formatter = logging.Formatter(
+                "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
+            )
+            handler.setFormatter(formatter)
+            app.logger.addHandler(handler)
+            app.logger.setLevel(logging.INFO)
+            app.logger.info("Tender app startup complete")
 
-        return app
+    return app
