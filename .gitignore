@@ -21,15 +21,12 @@ __pycache__/
 instance/site.db
 application/site.db 
 
-# Migrations
-migrations/
-*.pyc
-
 # Test & coverage artifacts
 .pytest_cache/
 .coverage
 htmlcov/
 *.log
+*.pyc
 
 # Build & distribution
 build/
