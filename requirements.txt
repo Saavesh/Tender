@@ -1,0 +1,17 @@
+# requirements.txt
+
+argon2-cffi
+Flask
+Flask-Cors
+Flask-Caching
+Flask-Migrate
+Flask-SQLAlchemy
+Flask-Security-Too
+gunicorn
+python-dotenv
+requests
+SQLAlchemy-Utils
+
+# Testing
+pytest
+pytest-flask
