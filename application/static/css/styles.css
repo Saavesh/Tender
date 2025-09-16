@@ -209,21 +209,22 @@ nav ul li a {
     transform: translateY(-3px);
 }
 
-.view-on-yelp-btn {
+.button-secondary {
     display: inline-block;
     margin-top: 1rem;
     padding: 0.8rem 1.5rem;
-    background-color: #333;
+    background-color: #555; /* A neutral dark gray */
     color: #fff;
+    border: none;
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-.view-on-yelp-btn:hover {
-    background-color: #ff6f61;
-    transform: translateY(-5px);
+.button-secondary:hover {
+    background-color: #333; /* Darker gray on hover */
+    transform: translateY(-3px);
 }
 
 .start_swipe-button {
