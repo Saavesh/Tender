@@ -27,26 +27,32 @@ def create_app(testing=False):
 
     # Bind extensions to app
     db.init_app(app)
-    migrate.init_app(app, db)
     cache.init_app(app)
 
+    # IMPORT MODELS EARLY to avoid circular issues with Flask-Security
+    from .models import User, Role
+    from flask_security import SQLAlchemyUserDatastore
+    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+
+    # NOW bind migrate (after models are known to db)
+    migrate.init_app(app, db)
+
+    # Initialize Flask-Security with user_datastore
+    security.init_app(app, user_datastore)
+
+    # Register routes
     from .routes import register_routes
     register_routes(app)
 
-    with app.app_context():
-        from .models import User, Role
-        from flask_security import SQLAlchemyUserDatastore
-        user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-        security.init_app(app, user_datastore)
-
-        if not app.debug:
-            handler = StreamHandler()
-            formatter = logging.Formatter(
-                "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
-            )
-            handler.setFormatter(formatter)
-            app.logger.addHandler(handler)
-            app.logger.setLevel(logging.INFO)
-            app.logger.info("Tender app startup complete")
+    # Logging
+    if not app.debug:
+        handler = StreamHandler()
+        formatter = logging.Formatter(
+            "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
+        )
+        handler.setFormatter(formatter)
+        app.logger.addHandler(handler)
+        app.logger.setLevel(logging.INFO)
+        app.logger.info("Tender app startup complete")
 
     return app
