@@ -1,31 +1,34 @@
+#application/routes.py
+# standard library
+import json
+import logging
+import os
+import uuid
+
+# Third-party
+import requests
 from flask import (
-    render_template,
-    request,
-    redirect,
-    url_for,
     flash,
     jsonify,
     make_response,
+    redirect,
+    render_template,
+    request,
+    url_for,
 )
-from flask_security import auth_required, current_user, logout_user
-from .models import Room, Restaurant, Vote, GuestUser, User
-import requests
-import os
-import uuid
-import json
-import logging
-from application.extensions import db, cache
+from flask_security import auth_required, current_user, logout_user, hash_password
 
+# Local/application
+from application.extensions import db, cache, security
+from .models import GuestUser, Restaurant, Room, Vote
 
 # ===================================================================================
 # Route registrations
 # ===================================================================================
+
+
 def register_routes(app):
-    from . import models  # Keep access to Room, etc.
-
-    # --------------------- Helper Functions ---------------------
-
-    @cache.cached(timeout=3600)  # Cache restaurant results for 1 hour
+    @cache.memoize(3600)
     def get_restaurant_data(location):
         """Fetches restaurant data from the Google Places API."""
         api_key = os.getenv("API_KEY")
@@ -39,9 +42,8 @@ def register_routes(app):
             "key": api_key,
             "type": "restaurant",
         }
-
         try:
-            response = requests.get(search_url, params=params)
+            response = requests.get(search_url, params=params, timeout=5)
             response.raise_for_status()
             results = response.json().get("results", [])
 
@@ -67,7 +69,7 @@ def register_routes(app):
             return formatted_restaurants
 
         except requests.exceptions.RequestException as e:
-            logging.error(f"Error fetching data from Google Places API: {e}")
+            logging.error("Error fetching data from Google Places API: %s", e)
             return []
 
     # --------------------- User-Facing Routes ---------------------
@@ -123,16 +125,26 @@ def register_routes(app):
     @auth_required()
     def start_swiping():
         return render_template("create_room.html")
-    
 
-    @app.route('/rooms')
+    @app.route("/rooms")
     @auth_required()
     def rooms():
         """Renders the page showing the user's active and inactive rooms."""
-        active_rooms = Room.query.filter_by(HostUserID=current_user.id, RoomStatus="active").order_by(Room.RoomCreated.desc()).limit(10).all()
-        inactive_rooms = Room.query.filter_by(HostUserID=current_user.id, RoomStatus="inactive").order_by(Room.RoomCreated.desc()).limit(10).all()
-        return render_template("rooms.html", active_rooms=active_rooms, inactive_rooms=inactive_rooms)
-
+        active_rooms = (
+            Room.query.filter_by(HostUserID=current_user.id, RoomStatus="active")
+            .order_by(Room.RoomCreated.desc())
+            .limit(10)
+            .all()
+        )
+        inactive_rooms = (
+            Room.query.filter_by(HostUserID=current_user.id, RoomStatus="inactive")
+            .order_by(Room.RoomCreated.desc())
+            .limit(10)
+            .all()
+        )
+        return render_template(
+            "rooms.html", active_rooms=active_rooms, inactive_rooms=inactive_rooms
+        )
 
     @app.route("/room/<string:roomid>")
     def room(roomid):
@@ -146,9 +158,7 @@ def register_routes(app):
                 else None
             )
             votes = Vote.query.filter_by(RoomID=roomid).all()
-            restaurants = {
-                r.id: r.name for r in Restaurant.query.filter_by(RoomID=roomid).all()
-            }
+            restaurants = {r.id: r.name for r in room.restaurants}
             user_votes = {}
             for vote in votes:
                 user = GuestUser.query.get(vote.GuestUserID)
@@ -182,9 +192,9 @@ def register_routes(app):
         voted_restaurant_ids = [
             v.RestaurantID for v in Vote.query.filter_by(GuestUserID=guest_user.id)
         ]
-        restaurants_to_vote = Restaurant.query.filter(
-            Restaurant.RoomID == roomid, ~Restaurant.id.in_(voted_restaurant_ids)
-        ).all()
+        restaurants_to_vote = [
+            r for r in room.restaurants if r.id not in voted_restaurant_ids
+        ]
 
         return render_template(
             "room.html",
@@ -264,28 +274,58 @@ def register_routes(app):
 
     @app.route("/create_vote", methods=["POST"])
     def create_vote():
-        data = request.json
+        data = request.get_json(silent=True) or {}
         room_id = data.get("RoomID")
         guest_user_id = data.get("GuestUserID")
         restaurant_id = data.get("RestaurantID")
         vote_choice = data.get("VoteChoice")
 
-        if not all([room_id, guest_user_id, restaurant_id, vote_choice is not None]):
+        # required fields (allow 0 as valid vote)
+        if (
+            room_id is None
+            or guest_user_id is None
+            or restaurant_id is None
+            or vote_choice is None
+        ):
             return jsonify({"error": "Missing required data."}), 400
 
-        if vote_choice not in [-1, 0, 1]:
+        # coerce vote to int and validate
+        try:
+            vote_choice = int(vote_choice)
+        except (TypeError, ValueError):
+            return jsonify({"error": "VoteChoice must be an integer."}), 400
+        if vote_choice not in (-1, 0, 1):
             return jsonify({"error": "Invalid vote choice."}), 400
 
-        new_vote = Vote(
-            VoteID=str(uuid.uuid4()),
-            GuestUserID=guest_user_id,
-            RoomID=room_id,
-            RestaurantID=restaurant_id,
-            VoteChoice=vote_choice,
-        )
-        db.session.add(new_vote)
+        # Checks - room, guest user in room, restaurant in room
+        room = Room.query.get(room_id)
+        if not room or room.RoomStatus != "active":
+            return jsonify({"error": "Room not found or not active."}), 400
+        guest = GuestUser.query.get(guest_user_id)
+        if not guest or guest.RoomID != room_id:
+            return jsonify({"error": "Guest not found or not in this room."}), 400
+        if not any(r.id == restaurant_id for r in room.restaurants):
+            return jsonify({"error": "Restaurant not in this room."}), 400
+
+        # create
+        existing = Vote.query.filter_by(
+            GuestUserID=guest_user_id, RoomID=room_id, RestaurantID=restaurant_id
+        ).first()
+        if existing:
+            existing.VoteChoice = vote_choice
+        else:
+            db.session.add(
+                Vote(
+                    VoteID=str(uuid.uuid4()),
+                    GuestUserID=guest_user_id,
+                    RoomID=room_id,
+                    RestaurantID=restaurant_id,
+                    VoteChoice=vote_choice,
+                )
+            )
+
         db.session.commit()
-        return jsonify({"message": "Vote successfully created."}), 201
+        return jsonify({"message": "Vote recorded."}), 201
 
     @app.route("/set_guest_done", methods=["POST"])
     def set_guest_done():
@@ -349,31 +389,27 @@ def register_routes(app):
 
     @app.route("/trigger-500")
     def trigger_500():
-        """Intentionally raises an exception to test the 500 error handler."""
-        raise Exception("Simulated Server Error")
+        raise RuntimeError("Simulated Server Error")
 
     # --------------------- Error Handlers & CLI ---------------------
 
     @app.errorhandler(500)
     def internal_error(error):
-        logging.error(f"500 Error: {error}")
+        logging.error("500 Error: %s", error)
         return render_template("500.html"), 500
 
     @app.errorhandler(404)
-    def page_not_found(error):
-        logging.warning(f"404 Not Found: {request.url}")
+    def page_not_found(_error):
+        logging.warning("404 Not Found: %s", request.url)
         return render_template("404.html"), 404
 
     @app.cli.command("init-db")
     def init_db_command():
-        from flask_security import hash_password
-
         db.create_all()
-        user_datastore = app.security.datastore
+        user_datastore = security.datastore
         if not user_datastore.find_user(email="test@me.com"):
             user_datastore.create_user(
                 email="test@me.com", password=hash_password("password")
             )
-            print("Default test user created.")
         db.session.commit()
         print("Database initialized.")
