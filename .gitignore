@@ -1,32 +1,22 @@
-# macOS & VS system files
+# .gitignore file Python and Flask
 .DS_Store
 .vscode/
-
-# Virtual environments
-.venv/
-venv/
+venv/            # Virtual environment 
+.env             # Environment variables and secrets
+instance/        # Local SQLite database
 
 # Python cache files
 __pycache__/
-*.py[cod]
+.pytest_cache/
+**/cache/
+*.py[cod]        # Any compiled Python files with extensions .pyc, .pyo, .pyd
 
-# Compiled object files
-*.so
-
-# Environment variables
-.env
-
-# Flask instance folder & local SQLite DB
-/instance/
-instance/site.db
-application/site.db 
 
 # Test & coverage artifacts
-.pytest_cache/
 .coverage
 htmlcov/
 *.log
-*.pyc
+
 
 # Build & distribution
 build/
@@ -34,12 +24,5 @@ dist/
 *.egg-info/
 
 
-# Media files
-*.mp4
-*.url
-
-# Project-specific artifacts (CU Boulder group project)
-weekly_status.md
-lab3_documentation/
-FINAL_REPORT/
-ERD/
+# Miscellaneous - Possibly delete if not needed
+Makefile
