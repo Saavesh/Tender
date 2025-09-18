@@ -1,98 +1,28 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    It's a Match!
+    Join the Room
 {% endblock %}
 
 {% block content %}
-<div class="results-container">
-    <div id="results-intro" class="results-intro">
-        <h2>And the winner is...</h2>
-    </div>
-
-    <div id="match-content" class="match-content hidden">
-        <h1 class="match-header">It's a Match!</h1>
-
-        <div class="match-cards-container">
-            <div class="profile-card group-card">
-                <div class="profile-image-container">
-                    <i class="fas fa-users fa-5x"></i> </div>
-                <h3>Your Group</h3>
-                <p>{{ room.Location }}</p>
+<div class="centered-container">
+    <section class="form-container">
+        <h2>Join the Voting Room</h2>
+        <p>Enter your name to start swiping!</p>
+        
+        <form action="{{ url_for('add_guest_user') }}" method="POST">
+            <input type="hidden" name="RoomID" value="{{ room.RoomID }}">
+            
+            <div class="form-group">
+                <label for="Username">Your Name:</label>
+                <input type="text" name="Username" id="Username" class="form-input" placeholder="e.g., Alex" required>
             </div>
-
-            <div class="vs-circle">VS</div>
-
-            {% if winning_restaurant %}
-            <div class="profile-card restaurant-card">
-                <div class="profile-image-container">
-                    <img src="{{ winning_restaurant.image_url }}" alt="Image of {{ winning_restaurant.name }}">
-                </div>
-                <h3>{{ winning_restaurant.name }}</h3>
-                <p>⭐ {{ winning_restaurant.rating }} ({{ winning_restaurant.review_count }} reviews)</p>
-                 <a href="{{ winning_restaurant.url }}" target="_blank" class="button-primary">View Details & Map</a>
-            </div>
-            {% else %}
-             <div class="profile-card restaurant-card">
-                <h3>No Clear Winner</h3>
-                <p>Looks like it was a tough choice!</p>
-            </div>
-            {% endif %}
-        </div>
-
-        <div class="details-toggle">
-            <button id="show-details-btn" class="button-secondary">See How Everyone Voted</button>
-        </div>
-
-        <div id="voting-summary" class="voting-summary hidden">
-            <h2 class="animated-subtitle">Voting Summary</h2>
-            <table class="voting-summary-table">
-                <thead>
-                    <tr>
-                        <th>User</th>
-                        {% for restaurant in restaurant_names %}
-                            <th>{{ restaurant }}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user, votes in user_votes.items() %}
-                        <tr>
-                            <td>{{ user }}</td>
-                            {% for restaurant in restaurant_names %}
-                                <td>
-                                    {% set vote = votes.get(restaurant) %}
-                                    {% if vote == 1 %} ❤️ Yum {% elif vote == 0 %} 🤔 Meh {% elif vote == -1 %} 🤢 Ew {% else %} - {% endif %}
-                                </td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+            
+            <button type="submit" class="button-primary">Join Room</button>
+        </form>
+    </section>
 </div>
 {% endblock %}
 
-{% block scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const intro = document.getElementById('results-intro');
-        const matchContent = document.getElementById('match-content');
-        const showDetailsBtn = document.getElementById('show-details-btn');
-        const votingSummary = document.getElementById('voting-summary');
 
-        // 1. Show the intro animation for a few seconds
-        setTimeout(() => {
-            intro.style.display = 'none'; // Hide intro
-            matchContent.classList.remove('hidden'); // Show the main match screen
-        }, 2500); // 2.5-second delay
 
-        // 2. Add click event to the "Show Details" button
-        showDetailsBtn.addEventListener('click', () => {
-            votingSummary.classList.toggle('hidden'); // Toggle visibility of the table
-            showDetailsBtn.textContent = votingSummary.classList.contains('hidden') ? 'See How Everyone Voted' : 'Hide Voting Details';
-        });
-    });
-</script>
-{% endblock %}
