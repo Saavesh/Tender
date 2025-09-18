@@ -1,56 +1,79 @@
 # application/__init__.py
 
+# Standard library
+import logging
+import os
+from logging import StreamHandler
+# Third-party
 from flask import Flask
 from dotenv import load_dotenv
-import logging
-from logging import StreamHandler
-import os
+from flask_security import SQLAlchemyUserDatastore
+# Local/application
+from .extensions import db, cache, migrate, security
 
-from .extensions import db, cache, migrate, security  # <-- from new file
 
-def create_app(testing=False):
+def create_app(test_config=None):
     load_dotenv()
-    app = Flask(__name__)
-    if testing:
-        app.config["TESTING"] = True
 
+    app = Flask(__name__, instance_relative_config=True)
+
+    # Ensure instance folder exists (for SQLite file))
+    os.makedirs(app.instance_path, exist_ok=True)
+
+    # Base config
     app.config.from_mapping(
         SECRET_KEY=os.getenv("SECRET_KEY"),
-        SQLALCHEMY_DATABASE_URI=os.getenv("SQLALCHEMY_DATABASE_URI"),
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
         SECURITY_PASSWORD_SALT=os.getenv("SECURITY_PASSWORD_SALT"),
         SECURITY_PASSWORD_HASH="bcrypt",
         SECURITY_REGISTERABLE=True,
+        SECURITY_SEND_REGISTER_EMAIL=False, # Disable email confirmation for simplicity
         CACHE_TYPE="SimpleCache",
         CACHE_DEFAULT_TIMEOUT=300,
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
     )
 
-    # Bind extensions to app
+    # Normalize DB URI (default to instance/site.db for relative sqlite URIs)
+    env_uri = os.getenv("SQLALCHEMY_DATABASE_URI")
+    if env_uri:
+        # Trust absolute sqlite (sqlite:////...)
+        if env_uri.startswith("sqlite:////") or not env_uri.startswith("sqlite:///"):
+            db_uri = env_uri
+        else:
+            # place DB in the instance folder
+            db_uri = "sqlite:///" + os.path.join(app.instance_path, "site.db")
+    else:
+        db_uri = "sqlite:///" + os.path.join(app.instance_path, "site.db")
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
+
+    # Allow tests to override (in-memory DB, disable CSRF)
+    if test_config:
+        app.config.update(test_config)
+
+    # ----- Extensions -----
     db.init_app(app)
     cache.init_app(app)
 
-    # IMPORT MODELS EARLY to avoid circular issues with Flask-Security
+    # Import models before migrate so Alembic sees them
     from .models import User, Role
-    from flask_security import SQLAlchemyUserDatastore
+
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-
-    # NOW bind migrate (after models are known to db)
     migrate.init_app(app, db)
-
-    # Initialize Flask-Security with user_datastore
     security.init_app(app, user_datastore)
 
-    # Register routes
+    # ----- Routes -----
     from .routes import register_routes
+
     register_routes(app)
 
-    # Logging
+    # ----- Logging -----
     if not app.debug:
         handler = StreamHandler()
-        formatter = logging.Formatter(
-            "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
+        handler.setFormatter(
+            logging.Formatter(
+                "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
+            )
         )
-        handler.setFormatter(formatter)
         app.logger.addHandler(handler)
         app.logger.setLevel(logging.INFO)
         app.logger.info("Tender app startup complete")
