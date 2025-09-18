@@ -3,6 +3,7 @@
 # Standard library
 from datetime import datetime
 import uuid
+import json
 # Third-party
 from flask_security.models import fsqla_v3 as fsqla
 # Local/application
@@ -34,6 +35,15 @@ class GuestUser(db.Model):
     # ORM-only relationship back to Room
     room = db.relationship("Room", back_populates="guests")
 
+    def to_dict(self):
+        """Converts the GuestUser object to a dictionary."""
+        return {
+            "id": self.id,
+            "Username": self.Username,
+            "RoomID": self.RoomID,
+            "done": self.done
+        }
+
 
 # Association table: Room <-> Restaurant (many-to-many)
 room_restaurants_association = db.Table(
@@ -41,6 +51,8 @@ room_restaurants_association = db.Table(
     db.Column("room_id", db.String(36), db.ForeignKey("room.RoomID"), primary_key=True),
     db.Column("restaurant_id", db.String(255), db.ForeignKey("restaurant.id"), primary_key=True),
 )
+
+
 
 class Restaurant(db.Model):
     __tablename__ = "restaurant"
@@ -57,7 +69,19 @@ class Restaurant(db.Model):
     def __repr__(self) -> str:
         return f"<Restaurant {self.name!r}>"
 
-
+    def to_dict(self):
+        """Converts the Restaurant object to a dictionary."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "image_url": self.image_url,
+            "url": self.url,
+            "categories": json.loads(self.categories) if self.categories else [],
+            "price_level": self.price_level,
+            "review_count": self.review_count,
+            "rating": self.rating,
+        }
+    
 class Room(db.Model):
     __tablename__ = "room"
 

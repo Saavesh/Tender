@@ -199,8 +199,8 @@ def register_routes(app):
         return render_template(
             "room.html",
             room=room,
-            restaurant_data=restaurants_to_vote,
-            current_guest_user=guest_user,
+            restaurant_data=[r.to_dict() for r in restaurants_to_vote],
+            current_guest_user=guest_user.to_dict()
         )
 
     # --------------------- Auth & Profile Updates ---------------------
