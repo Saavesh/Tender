@@ -1,28 +1,25 @@
-# .gitignore file Python and Flask
+# .gitignore
+# MacOS system files, VS settings, and build artifacts
 .DS_Store
 .vscode/
-venv/            # Virtual environment 
-.env             # Environment variables and secrets
-instance/        # Local SQLite database
+build/
+
+# Virtual environment
+venv/
+
+#Sensitive files
+.env
+instance/
 
 # Python cache files
 __pycache__/
 .pytest_cache/
 **/cache/
-*.py[cod]        # Any compiled Python files with extensions .pyc, .pyo, .pyd
-
+*.py[cod]
+*.cache
 
 # Test & coverage artifacts
 .coverage
-htmlcov/
-*.log
-
-
-# Build & distribution
-build/
-dist/
-*.egg-info/
-
 
 # Miscellaneous - Possibly delete if not needed
 Makefile
