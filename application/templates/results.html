@@ -1,88 +1,109 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Room Results
-{% endblock %}
-
-{% block header %}
-    <h1 class="animated-header">🎉 Voting Results 🎉</h1>
+    It's a Match!
 {% endblock %}
 
 {% block content %}
-    <!-- Intro Animation -->
+<div class="results-container">
     <div id="results-intro" class="results-intro">
-        <h2>The results are in...</h2>
+        <h2>The Results are in..</h2>
     </div>
 
-    <!-- Winning Restaurant Section -->
-    <div id="results-content" class="results-content hidden">
-        {% if winning_restaurant %}
-            <div class="restaurant-card animated-card">
-                <h3 class="winning-restaurant-name">{{ winning_restaurant.name }}</h3>
-                <img src="{{ winning_restaurant.image_url }}" alt="Restaurant image" style="max-width: 100%; height: auto; border-radius: 8px;">
-                <p>Rating: {{ winning_restaurant.rating }} ({{ winning_restaurant.review_count }} reviews)</p>
-                <p>Price: {{ winning_restaurant.price }}</p>
-                <p>Description:
-                    {% if winning_restaurant.categories %}
-                        {{ winning_restaurant.categories | map(attribute='title') | join(', ') }}
-                    {% else %}
-                        No categories available
-                    {% endif %}
-                </p>
-                <a href="{{ winning_restaurant.url }}" target="_blank" class="button-secondary">View Details & Map</a>
-            </div>
-        {% else %}
-            <p>No winning restaurant was found.</p>
-        {% endif %}
+    <div id="match-content" class="match-content hidden">
+        <h1 class="match-header">It's a Match!</h1>
 
-        <!-- Voting Summary Section -->
-        <h2 class="animated-subtitle">Voting Summary</h2>
-        <table class="voting-summary-table">
-            <thead>
-                <tr>
-                    <th>User</th>
-                    {% for restaurant in restaurant_names %}
-                        <th>{{ restaurant }}</th>
+        <div class="match-cards-container">
+            <div class="profile-card group-card">
+                <div class="avatar-stack">
+                    {% for guest in room.guests %}
+                    <div class="stacked-avatar" title="{{ guest.Username }}">
+                        {{ guest.Username[0] | upper }}
+                    </div>
                     {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for user, votes in user_votes.items() %}
+                </div>
+                <h3>Your Group</h3>
+                <p>{{ room.Location }}</p>
+            </div>
+
+            {% if winning_restaurant %}
+            <div class="profile-card restaurant-card">
+                <div class="card-content">
+                    <div class="profile-image-container">
+                        <img src="{{ winning_restaurant.image_url }}" alt="Image of {{ winning_restaurant.name }}">
+                    </div>
+                    <h3>{{ winning_restaurant.name }}</h3>
+                    <p>⭐ {{ winning_restaurant.rating }} ({{ winning_restaurant.review_count }} reviews)</p>
+                    <p>Price: {{ '$' * winning_restaurant.price_level if winning_restaurant.price_level else 'N/A' }}</p>
+                </div>
+            </div>
+            {% else %}
+            <div class="profile-card restaurant-card">
+                <h3>No Clear Winner</h3>
+                <p>Looks like it was a tough choice!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="results-actions">
+            {% if winning_restaurant %}
+                <a href="{{ winning_restaurant.url }}" target="_blank" class="button-primary">View Details & Map</a>
+            {% endif %}
+            <button id="show-details-btn" class="button-secondary">See How Everyone Voted</button>
+        </div>
+
+
+        
+        <div id="voting-summary" class="voting-summary hidden">
+            <h2 class="animated-subtitle">Voting Summary</h2>
+            <table class="voting-summary-table">
+                <thead>
                     <tr>
-                        <td>{{ user }}</td>
+                        <th>User</th>
                         {% for restaurant in restaurant_names %}
-                            <td>
-                                {% if restaurant in votes %}
-                                    {% if votes[restaurant] == 1 %}
-                                        Yum
-                                    {% elif votes[restaurant] == 0 %}
-                                        Meh
-                                    {% elif votes[restaurant] == -1 %}
-                                        Ew
-                                    {% endif %}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
+                            <th>{{ restaurant }}</th>
                         {% endfor %}
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for user, votes in user_votes.items() %}
+                        <tr>
+                            <td>{{ user }}</td>
+                            {% for restaurant in restaurant_names %}
+                                <td>
+                                    {% set vote = votes.get(restaurant) %}
+                                    {% if vote == 1 %} ❤️ Yum {% elif vote == 0 %} 🤔 Meh {% elif vote == -1 %} 🤢 Ew {% else %} - {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
+{{ super() }}
 <script>
-    // Show intro animation, then reveal the results
     document.addEventListener('DOMContentLoaded', function () {
         const intro = document.getElementById('results-intro');
-        const content = document.getElementById('results-content');
+        const matchContent = document.getElementById('match-content');
+        const showDetailsBtn = document.getElementById('show-details-btn');
+        const votingSummary = document.getElementById('voting-summary');
 
+        // Show the intro animation, then reveal the results
         setTimeout(() => {
-            intro.style.display = 'none'; // Hide the intro
-            content.classList.remove('hidden'); // Reveal the results
-        }, 3000); // 3-second delay for intro animation
+            intro.style.display = 'none';
+            matchContent.classList.remove('hidden');
+        }, 2500);
+
+        // Add click event to the "Show Details" button
+        showDetailsBtn.addEventListener('click', () => {
+            votingSummary.classList.toggle('hidden');
+            showDetailsBtn.textContent = votingSummary.classList.contains('hidden') ? 'See How Everyone Voted' : 'Hide Voting Details';
+        });
     });
 </script>
 {% endblock %}
