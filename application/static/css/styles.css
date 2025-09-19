@@ -1,24 +1,15 @@
 /* ###########################################################################
-   styles.css
-
-   This stylesheet contains all of the CSS styles used in the web application.
-
+   application/static/css/styles.css
    Table of Contents:
-   1. Global Styles         - Basic styles applied across the app
-   2. Header and Navigation - Styles for the header and navigation bar
-   3. Home Page Layout      - Specific styling for the homepage
-   4. Buttons               - Common button styles
-   5. Forms                 - Styling for forms like login and contact
-   6. Tables                - Styles for summary tables to display rooms and results
-   7. Voting Room           - Layout and styles for the voting feature
-   8. Results Page          - Animations and table styling for results
-   9. Flash Messages        - Notifications for errors and successes
-   10. Rooms Overview Page  - Styling for the rooms summary
-   11. Footer               - Footer layout and styling
+   1. Global Elements
+   2. Layout
+   3. Components
+   4. Page Specific Styles
+   5. Utilities & Animations
+   6. Footer
 ########################################################################### */
-
 /* ==========================================================================
-   1. Global Styles - Style for elements like body, links, and media.
+   1. Global Elements
    ========================================================================== */
 html, body {
     height: 100%; /* full viewport height */
@@ -32,6 +23,14 @@ body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(to left, #ff5f6d, #ffc371);/* Gradient background */
     color: #333;
+    flex: 1; /* Fill remaining space */
+    min-width: 300px; /* Prevents layout issues on very small screens */
+}
+
+main {
+    padding: 2em 1em;
+    text-align: center;
+    flex: 1;
 }
 
 a {
@@ -41,29 +40,6 @@ a {
 
 a:hover {
     color: #b03a3a; /* Darker red color on hover */
-    text-decoration: none;
-    color: inherit;
-}
-
-a:hover {
-    color: #b03a3a; /* Darker red color on hover */
-}
-
-/* user-entry */
-.centered-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh; /* Adjust for header/footer */
-    padding: 2rem;
-    text-align: center;
-}
-
-main {
-    padding: 2em 1em;
-    text-align: center;
-    flex: 1; /* Fill remaining space */
 }
 
 section h2 {
@@ -89,22 +65,11 @@ img, video {
     margin-bottom: 1rem;
 }
 
-/* Drop-in animation for the video */
-@keyframes dropIn {
-    0% {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
 /* ==========================================================================
-   2. Header and Navigation Bar
+   2. Layout
    ========================================================================== */
-   header {
+
+header {
     background-color: #000;
     color:#fff;
     padding: 1em 0;
@@ -113,13 +78,11 @@ img, video {
 
 nav ul {
     list-style: none; /* Remove bullets */
-    list-style: none; /* Remove bullets */
     display: flex;
     justify-content: center;
     gap: 1.5rem;
-    justify-content: center;
-    gap: 1.5rem;
     margin-top: 1.5em;
+    padding: 0;
 }
 
 nav ul li a {
@@ -129,71 +92,22 @@ nav ul li a {
     color: #fff;
 }
 
-/* ==========================================================================
-   3. Home Page Layout - Separate left and right sections for text and graphic
-   ========================================================================== */
-
-.home-container {
+.centered-container {
     display: flex;
-    justify-content: center; /* Center both sections */
-    align-items: center; /* Vertically align them */
-    min-height: 100vh; /* Full viewport height */
-    gap: 1rem; /* Reduce gap between text and graphic */
-    flex-wrap: wrap; /* Stack sections on smaller screens */
-}
-
-/* Left side of the homepage */
-.home-left {
-    flex: 1;
-    display: flex;
-    flex-direction: column; 
-    justify-content: center;
-    align-items: flex-start;
-    max-width: 450px; /* Reduce max width for better alignment */
-    text-align: left;
-}
-
-.home-left h1 {
-    font-size: 5rem;
-    color: #333;
-    margin-bottom: 1rem;
-}
-
-.home-left p {
-    font-size: 1.2rem;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-}
-
-/* Right side of the homepage */
-.home-right {
-    flex: 1;
-    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 400px; /* Limit the graphic size */
-}
-
-.graphic-img {
-    max-width: 90%; /* Shrink slightly for balance */
-    height: auto;
-    border-radius: 20px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-}
-
-.home-logo video {
-    width: 200px; /* Keep consistent with graphic size */
-    height: 200px;
-    border-radius: 70%;
-    animation: dropIn 1s ease-out;
+    min-height: 80vh; /* Adjust for header/footer */
+    padding: 2rem;
+    text-align: center;
 }
 
 /* ==========================================================================
-   . Buttons - Separate left and right sections for text and graphic
+   3. Components
    ========================================================================== */
+/* --- Buttons --- */
 .button-primary {
-    align-self: flex-start;
+    /*align-self: flex-start;*/
     padding: 0.8rem 2rem;
     background: linear-gradient(to right, #ff6f61, #ff3d3d);
     color: white;
@@ -213,7 +127,7 @@ nav ul li a {
     display: inline-block;
     margin-top: 1rem;
     padding: 0.8rem 1.5rem;
-    background-color: #555; /* A neutral dark gray */
+    background-color: #555;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -243,14 +157,8 @@ nav ul li a {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.start_swipe-button:hover {
-    background-color: #ff4040;
-    transform: translateY(-2px);
-}
-
-.start_swipe-button:active {
-    transform: translateY(0);
-}
+.start_swipe-button:hover { background-color: #ff4040; transform: translateY(-2px); }
+.start_swipe-button:active { transform: translateY(0); }
 
 .create-room-btn {
     display: inline-block;
@@ -279,11 +187,68 @@ nav ul li a {
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Voting Button Parent Container */
+.vote-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Spacing between buttons */
+    margin-top: 20px;
+}
 
-/* ---------------------------------------------------------------- */
-/* 5. Forms                                                */
-/* ---------------------------------------------------------------- */
-form {
+/* Voting Button Child Items */
+.vote-btn {
+    width: 60px; /* Make the buttons round */
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%; /* Round shape */
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff; /* Text color */
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.vote-btn:hover { transform: scale(1.1); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); }
+.vote-btn:active { transform: scale(0.95); box-shadow: none; }
+
+.vote-btn.yum { background-color: #4CAF50; }
+.vote-btn.ew { background-color: #F44336; }
+.vote-btn.meh { background-color: #9E9E9E;}
+
+
+#end-voting-btn {
+  display: none;                  /* stays hidden until JS shows it */
+  padding: 0.75rem 1.25rem;
+  border: 0;
+  border-radius: 10px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ff6b6b, #f06595);
+  color: #fff;
+  box-shadow: 0 8px 16px rgba(240, 101, 149, 0.25);
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 200ms ease;
+}
+
+/* Center the host-only End Voting button on the voting page */
+.voting-room #end-voting-btn {
+  align-self: center;      /* override the .button-primary default */
+  margin: 1rem auto 0;     /* a little spacing and hard-center fallback */
+}
+
+/* End Voting button */
+#end-voting-btn:active { transform: translateY(0); box-shadow: 0 6px 12px rgba(240, 101, 149, 0.25); }
+#end-voting-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 18px rgba(240, 101, 149, 0.35); }
+#end-voting-btn:focus { outline: 2px solid #ffdce6; outline-offset: 2px; }
+#end-voting-btn:disabled { opacity: 0.6;cursor: not-allowed; }
+#end-voting-btn.show { animation: pop-in 180ms ease-out; }
+
+
+/*/////////////// --- Forms --- //////////////////*/
+form, .form-container{
     max-width: 500px;
     margin: 2em auto;
     padding: 1em;
@@ -317,6 +282,12 @@ form {
     background-color: #fff;
 }
 
+.form-container input:focus,
+.form-container textarea:focus {
+    outline: none;
+    border-color: #ff6f61;
+}
+
 .form-container button {
     display: block;
     width: 100%;
@@ -337,243 +308,39 @@ form {
     background: linear-gradient(to right, #ff3d3d, #b03a3a);
 }
 
-.form-container input:focus,
-.form-container textarea:focus {
-    outline: none;
-    border-color: #ff6f61;
-}
 
-
-/* ---------------------------------------------------------------- */
-/* 6. Tables                                          */
-/* ---------------------------------------------------------------- */
-.summary-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
+/* ////////////////--- Cards ---///////////////// */
+.profile-card {
     background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.summary-table th {
-    background: #ff6f61;
-    color: white;
-    text-transform: uppercase;
-    padding: 1rem;
-    text-align: left;
-}
-
-.summary-table td {
-    padding: 0.8rem;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.summary-table td a {
-    color: #ff6f61;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.summary-table td a:hover {
-    text-decoration: underline;
-}
-
-/* ---------------------------------------------------------------- */
-/* 7. Profile Page                                              */
-/* ---------------------------------------------------------------- */
-.profile-container {
-    display: flex;
-    gap: 2rem;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Sidebar */
-.sidebar {
-    background: #2c2c2c; /* Dark gray */
+    border-radius: 15px;
     padding: 1.5rem;
-    border-radius: 10px;
-    width: 250px;
-    height: auto;
+    width: 280px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 2rem ;
-}
-
-.sidebar ul li a {
-    display: block;
-    text-decoration: none;
-    color: #ffc371; /* Light orange */
-    font-weight: 600;
-    padding: 1.5rem 1rem;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
-
-.sidebar ul li a:hover {
-    background: #ffc371; /* Light orange background on hover */
-    color: #2c2c2c;
-}
-
-/* Sidebar Active Link */
-.sidebar ul li a.active {
-    background: #ff6f61; /* Highlight active link */
-    color: white; /* White text for active link */
-}
-
-.profile-content {
-    flex: 1;
-    background: #f9f9f9; /* Light gray */
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.profile-content h1 {
-    font-size: 2rem;
-    color: #b03a3a;
-
-}
-
-/* Form Styling */
-.profile-content form {
-    display: flex;
-    flex-direction: column;
-    gap:.5rem; /* Reduced gap between fields */
-}
-
-.profile-content .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 0.5rem; /* Less vertical spacing */
-}
-
-.profile-content .form-group label {
-    margin-bottom: 0.3rem; /* Tighter spacing between label and input */
-    font-weight: bold;
-}
-
-.profile-content .form-group input {
-    padding: 0.6rem; /* Slightly smaller padding inside input fields */
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-/* Reduce spacing above "Change Password" heading */
-.profile-content h2 {
-    font-size: 1.5rem;
-    margin-top: 1rem; /* Closer spacing */
-    color: #b03a3a;
-}
-
-/* Rooms section within Profile Page and Results Table */
-.rooms-section table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    background: #fff;
-    border-radius: 10px;
+.profile-card .profile-image-container {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 1rem auto;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.rooms-section td {
-    padding: 0.8rem;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.rooms-section th {
-    background: #ff6f61;
-    color: white;
-    text-transform: uppercase;
-}
-
-.rooms-section td a {
-    color: #ff6f61;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-
-/* ---------------------------------------------------------------- */
-/* 8. Voting Room                                                     */
-/* ---------------------------------------------------------------- */
-.voting-room {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: flex-start;
-    margin-top: 0px;
+    background-color: #f0f0f0;
+}
+
+.profile-card img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* User avatars in a row */
-.user-row {
-    display: flex;
-    justify-content: center;
-    gap: 0px;
-    margin-bottom: .5em;
-    padding: 0;
-    list-style-type: none;
+.profile-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
 }
-
-/* Circular user avatar styling */
-.user-avatar {
-    background-color: #222;
-    color: #fff;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-    font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease-in-out;
-}
-
-/* User avatar styling when finished voting */
-.user-avatar-done {
-    background-color: #4CAF50; /* Green to  */
-    border: 2px solid #388E3C; 
-}
-
-.user-avatar:hover {
-    transform: scale(1.1); /* Slight hover effect */
-}
-
-#current-user {
-    display: flex; /* Use flexbox for centering */
-    justify-content: center; /* Center horizontally */
-    margin: auto;
-}
-
-/* Main user avatar inside restaurant info */
-#main_user {
-    margin: 10px auto 0 auto; /* Center the avatar horizontally */
-    background-color: #222;
-    color: #fff;
-    border-radius: 50%;
-    width: 80px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    font-size: 0.9em;
-}
-
 
 /* Restaurant Info Card - Tinder Style */
 .restaurant-info {
@@ -608,146 +375,91 @@ form {
     margin: 0.5em 0;
 }
 
-/* Styling for Vote Buttons */
-.vote-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px; /* Spacing between buttons */
-    margin-top: 20px;
-}
-
-.vote-btn {
-    width: 60px; /* Make the buttons round */
-    height: 60px;
+/* Main user avatar inside restaurant info */
+#main_user {
+    margin: 10px auto 0 auto; /* Center the avatar horizontally */
+    background-color: #222;
+    color: #fff;
+    border-radius: 50%;
+    width: 80px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none;
-    border-radius: 50%; /* Round shape */
-    font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    font-size: 0.9em;
+}
+
+
+/* ////////////////--- Avators ---///////////////// */
+.user-avatar {
+    background-color: #222;
+    color: #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
     font-weight: bold;
-    color: #fff; /* Text color */
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease, background-color 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease-in-out;
 }
 
-/* Button Colors */
-.vote-btn.yum {
-    background-color: #4CAF50; /* Green */
+.user-avatar:hover {
+    transform: scale(1.1); /* Slight hover effect */
 }
 
-.vote-btn.ew {
-    background-color: #F44336; /* Red */
+.user-avatar-done {
+    background-color: #4CAF50; /* Green to  */
+    border: 2px solid #388E3C; 
 }
 
-.vote-btn.meh {
-    background-color: #9E9E9E; /* Gray */
-}
-
-/* Button Hover Effects */
-.vote-btn:hover {
-    transform: scale(1.1); /* Enlarge on hover */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Increase shadow on hover */
-}
-
-.vote-btn:active {
-    transform: scale(0.95); /* Shrink slightly on click */
-    box-shadow: none; /* Remove shadow on click */
+#current-user {
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    margin: auto;
 }
 
 
-/* ---------------------------------------------------------------- */
-/* 9. Results Page  */
-/* ---------------------------------------------------------------- */
-
-/* Intro Animation */
-.results-intro {
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #333;
-    margin: 2rem 0;
-    animation: fadeInOut 3s forwards;
-}
-
-/* Fade In and Out */
-@keyframes fadeInOut {
-    0% {
-        opacity: 0;
-    }
-    20% {
-        opacity: 1;
-    }
-    80% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-/* Hide Content Initially */
-.hidden {
-    display: none;
-}
-
-/* Animated Header */
-.animated-header {
-    font-size: 2.5rem;
-    text-align: center;
-    animation: popIn 1s ease-in-out forwards, bounce 1.5s infinite alternate;
-    margin-bottom: 1rem;
-}
-
-/* Animated Winning Restaurant Card */
-.animated-card {
-    margin: 2rem auto;
-    max-width: 600px;
-    padding: 1.5rem;
-    background: linear-gradient(to bottom, #ff5f6d, #ffc371);
+/* ////////////////--- Tables---///////////////// */
+.summary-table, .rooms-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: #fff;
     border-radius: 10px;
+    overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    animation: slideIn 1s ease-out forwards;
-    text-align: center;
+}
+
+.summary-table th, .rooms-section th {
+    background: #ff6f61;
     color: white;
+    text-transform: uppercase;
+    padding: 1rem;
+    text-align: left;
 }
 
-/* Slide-in Animation */
-@keyframes slideIn {
-    0% {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
+.summary-table td, .rooms-section td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
-/* Winning Restaurant Name */
-.winning-restaurant-name {
-    font-size: 2rem;
+.summary-table td a, .rooms-section td a {
+    color: #ff6f61;
     font-weight: bold;
-    margin-bottom: 0.5rem;
-    animation: fadeIn 2s ease-out forwards;
+    text-decoration: none;
 }
 
-/* Fade-in Animation */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+.summary-table td a:hover {
+    text-decoration: underline;
 }
 
 
-
-/* ---------------------------------------------------------------- */
-/* 10. Flash Messages                                 
-/* ---------------------------------------------------------------- */
+/* ////////////////--- Flash Messages---///////////////// */
 .flashes {
     margin: 0.5em auto; /* Smaller margin */
     padding: 0.8em; /* Reduce padding */
@@ -791,14 +503,311 @@ form {
     color: inherit;
 }
 
-/* ---------------------------------------------------------------- */
-/* 11. Footer                                                    */
-/* ---------------------------------------------------------------- */
+
+/* ==========================================================================
+   4. Page Specific Styles
+   ========================================================================== */
+/* ////////////////--- Home Page---///////////////// */
+.home-container {
+    display: flex;
+    justify-content: center; /* Center both sections */
+    align-items: center; /* Vertically align them */
+    min-height: 100vh; /* Full viewport height */
+    gap: 1rem; /* Reduce gap between text and graphic */
+    flex-wrap: wrap; /* Stack sections on smaller screens */
+}
+
+.home-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 450px;
+    text-align: left;
+}
+
+.home-left h1 {
+    font-size: 5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.home-left p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Right side of the homepage */
+.home-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 400px; /* Limit the graphic size */
+}
+
+/* Photo on right side of homepage*/
+.graphic-img {
+    max-width: 90%; /* Shrink slightly for balance */
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* Video logo on left of homepage */
+.home-logo video {
+    width: 200px; /* Keep consistent with graphic size */
+    height: 200px;
+    border-radius: 70%;
+    animation: dropIn 1s ease-out;
+}
+
+
+/* ////////////////--- Voting Room---///////////////// */
+.voting-room {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 0px;
+    width: 100%;
+}
+
+/* User avatars in a row */
+.user-row {
+    display: flex;
+    justify-content: center;
+    gap: 0px;
+    margin-bottom: .5em;
+    padding: 0;
+    list-style-type: none;
+}
+
+/* ////////////////--- Profile Page---///////////////// */
+.profile-container {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.profile-content {
+    flex: 1;
+    background: #f9f9f9; /* Light gray */
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-content h1 {
+    font-size: 2rem;
+    color: #b03a3a;
+}
+/* Reduce spacing above "Change Password" heading */
+.profile-content h2 {
+    font-size: 1.5rem;
+    margin-top: 1rem; /* Closer spacing */
+    color: #b03a3a;
+}
+
+.profile-content form {
+    display: flex;
+    flex-direction: column;
+    gap:.5rem; /* Reduced gap between fields */
+}
+
+.profile-content .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem; /* Less vertical spacing */
+}
+
+.profile-content .form-group label {
+    margin-bottom: 0.3rem; /* Tighter spacing between label and input */
+    font-weight: bold;
+}
+
+.profile-content .form-group input {
+    padding: 0.6rem; /* Slightly smaller padding inside input fields */
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.sidebar {
+    background: #2c2c2c; /* Dark gray */
+    padding: 1.5rem;
+    border-radius: 10px;
+    width: 250px;
+    height: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 2rem ;
+}
+
+.sidebar ul li a {
+    display: block;
+    text-decoration: none;
+    color: #ffc371; /* Light orange */
+    font-weight: 600;
+    padding: 1.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+    background: #ffc371; /* Light orange background on hover */
+    color: #2c2c2c;
+}
+
+/* Sidebar Active Link */
+.sidebar ul li a.active {
+    background: #ff6f61; /* Highlight active link */
+    color: white; /* White text for active link */
+}
+
+/* ////////////////--- Results Page---///////////////// */
+.results-container {
+    text-align: center;
+    padding: 2rem;
+}
+
+.match-header {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+.match-cards-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.match-content {
+    animation: fadeIn 1s ease-in-out;
+}
+
+.vs-circle {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #555;
+    background: #fff;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.details-toggle {
+    margin-top: 3rem;
+}
+
+/* Intro Animation */
+.results-intro {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    margin: 2rem 0;
+    animation: fadeInOut 3s forwards;
+}
+
+/* Animated Header */
+.animated-header {
+    font-size: 2.5rem;
+    text-align: center;
+    animation: popIn 1s ease-in-out forwards, bounce 1.5s infinite alternate;
+    margin-bottom: 1rem;
+}
+
+/* Animated Winning Restaurant Card */
+.animated-card {
+    margin: 2rem auto;
+    max-width: 600px;
+    padding: 1.5rem;
+    background: linear-gradient(to bottom, #ff5f6d, #ffc371);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    animation: slideIn 1s ease-out forwards;
+    text-align: center;
+    color: white;
+}
+
+.winning-restaurant-name {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    animation: fadeIn 2s ease-out forwards;
+}
+
+.voting-summary {
+    margin-top: 2rem;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+
+/* ==========================================================================
+   5. Utilities & Animations
+   ========================================================================== */
+/* Hide Content Initially */
+.hidden { display: none;
+}
+
+/* Drop-in animation for the video */
+@keyframes dropIn {
+    0% { transform: translateY(-100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Pop-in animation for the button */
+@keyframes pop-in {
+    0%   { transform: scale(0.95); opacity: 0; }
+    100% { transform: scale(1);    opacity: 1; }
+}
+
+@keyframes slideIn {
+    0% { transform: translateY(-50px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+
+
+/* ==========================================================================
+   6. Footer
+   ========================================================================== */
 footer {
     font-family: 'Poppins', sans-serif;
-    font-size: 0.8em; /* Smaller text for the footer */
+    font-size: 0.8em;
     color: #f5f5f5; 
     background-color: #111;
     text-align: center;
     padding: 1em 0;
+    margin-top: auto;
 }
