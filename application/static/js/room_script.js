@@ -14,11 +14,19 @@ const imageDiv = document.getElementById('restaurant-image');
 const ratingDiv = document.getElementById('restaurant-rating');
 const priceDiv = document.getElementById('restaurant-price');
 const descriptionDiv = document.getElementById('restaurant-description');
+
+// --- Buttons ---
 const endRoomButton = document.getElementById('end-voting-btn');
 const yumButton = document.getElementById("yum-btn");
 const ewButton = document.getElementById("ew-btn");
 const mehButton = document.getElementById("meh-btn");
+
+// --- Users ---
 const guestList = document.getElementById('guest-list');
+const IS_HOST = String(userId) === String(hostUserId);
+
+
+// --- Index for restaurant list. passed throuhg /room route ---
 let currentIndex = 0;
 
 // --- Functions ---
@@ -47,6 +55,7 @@ async function checkRoomState() {
                 return;
             }
         }
+        // Update guest user list if room is still active
         const usersResponse = await fetch(`/get_room_users?RoomID=${roomId}`);
         if (usersResponse.ok) {
             const users = await usersResponse.json();
@@ -58,31 +67,49 @@ async function checkRoomState() {
 }
 
 async function updateRestaurantCard(index) {
-    if (index >= restaurantData.length) {
-        document.getElementById('completion-message').classList.remove('hidden');
-        document.getElementById('restaurant-info').style.display = 'none';
-        document.querySelector('.vote-buttons').style.display = 'none';
-        document.getElementById('current-user').classList.add('user-avatar-done');
-        
-        await fetch('/set_guest_done', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ GuestUserID: currentGuestUser.id })
-        });
+  // done with all restaurants
+  if (index >= restaurantData.length) {
+    document.getElementById('completion-message')?.classList.remove('hidden');
+    restaurantInfo?.classList.add('hidden'); // or try: restaurantInfo.style.display = 'none'; if this doesnt work
 
-        if (userId === hostUserId && endRoomButton) {
-            endRoomButton.style.display = 'block';
-        }
-    } else {
-        const restaurant = restaurantData[index];
-        nameDiv.textContent = restaurant.name || "N/A";
-        imageDiv.src = restaurant.image_url || "https://via.placeholder.com/400";
-        ratingDiv.textContent = `Rating: ${restaurant.rating || "N/A"} (${restaurant.review_count || 0} reviews)`;
-        // Convert numeric price_level to dollar signs
-        priceDiv.textContent = `Price: ${'$'.repeat(restaurant.price_level) || 'N/A'}`;
-        descriptionDiv.textContent = restaurant.categories ? restaurant.categories.map(c => c.title).join(', ') : "N/A";
+    // Hide only voting buttons, NOT the container (so the end button can show)
+    yumButton?.classList.add('hidden');
+    ewButton?.classList.add('hidden');
+    mehButton?.classList.add('hidden');
+
+    document.getElementById('current-user')?.classList.add('user-avatar-done');
+
+    // Show the end button for the host
+    if (IS_HOST && endRoomButton) {
+      endRoomButton.classList.remove('hidden');
+      endRoomButton.style.display = 'inline-block';
     }
+
+    try {
+      await fetch('/set_guest_done', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ GuestUserID: currentGuestUser.id })
+      });
+    } catch (err) {
+      console.error('set_guest_done failed:', err);
+    }
+    return;
+  }
+
+  // otherwise, render the current restaurant
+  const r = restaurantData[index] || {};
+  nameDiv.textContent = r.name ?? 'N/A';
+  imageDiv.src = r.image_url || 'https://via.placeholder.com/400';
+  ratingDiv.textContent = `Rating: ${r.rating ?? 'N/A'} (${r.review_count ?? 0} reviews)`;
+
+  const priceLevel = Math.max(0, Math.min(4, Number(r.price_level) || 0));
+  priceDiv.textContent = `Price: ${priceLevel ? '$'.repeat(priceLevel) : 'N/A'}`;
+
+  const cats = Array.isArray(r.categories) ? r.categories.map(c => c.title).join(', ') : 'N/A';
+  descriptionDiv.textContent = cats;
 }
+
 
 async function castVote(voteChoice) {
     const restaurantID = restaurantData[currentIndex]?.id;
@@ -114,16 +141,22 @@ async function castVote(voteChoice) {
 }
 
 async function endVoting() {
-    try {
-        const response = await fetch('/finalize_room', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ roomId })
-        });
-        if (!response.ok) alert('Failed to finalize room.');
-    } catch (error) {
-        console.error('Error finalizing room:', error);
+  try {
+    const res = await fetch('/finalize_room', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ roomId })
+    });
+    if (res.ok) {
+      // show results
+      window.location.reload();
+    } else {
+      alert('Failed to finalize room.');
     }
+  } catch (err) {
+    console.error('Error finalizing room:', err);
+    alert('An error occurred. Please try again.');
+  }
 }
 
 // --- Event Listeners ---
