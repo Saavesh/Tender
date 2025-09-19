@@ -17,7 +17,6 @@
         <h3>Active Voters in the Room</h3>
         <ul id="guest-list" class="user-row">
         </ul>
-        <!-- Placeholder for current user's avatar -->
         <div id="current-user" class="user-avatar">
             {{ current_guest_user.Username }}
         </div>
@@ -29,47 +28,41 @@
         <button id="share-btn" class="button-secondary">Copy Invite Link</button>
     </div>
     
-    <!-- Placeholder for completion message -->
+    <!-- Completion message -->
     <div id="completion-message" class="hidden">
         <p>Voting complete! Please wait for the host to finalize the results.</p>
     </div>
 
-    <!-- Central restaurant information card -->
-    <div class="restaurant-info">
-        <div class="restaurant-card" id="restaurant-info">
-            <!-- Restaurant Name -->
-            <h3 id="restaurant-name"></h3>
-            <!-- Restaurant Image -->
-            <img id="restaurant-image" src="" alt="Restaurant image" style="max-width: 100%; height: auto; border-radius: 8px;">
-            <!-- Rating and Review Count -->
-            <p id="restaurant-rating"></p>
-            <!-- Price Range -->
-            <p id="restaurant-price"></p>
-            <!-- Restaurant Details -->
-            <p id="restaurant-description"></p>
-        </div>
+<!-- Central restaurant information card -->
+<div class="restaurant-info" id="restaurant-info">
+  <h3 id="restaurant-name"></h3>
+  <img id="restaurant-image" src="" alt="Restaurant image">
+  <p id="restaurant-rating"></p>
+  <p id="restaurant-price"></p>
+  <p id="restaurant-description"></p>
+</div>
 
-        <!-- Voting Buttons -->
-        <div class="vote-buttons">
-            <button class="vote-btn ew" id="ew-btn">Ew</button>
-            <button class="vote-btn meh" id="meh-btn">Meh</button>
-            <button class="vote-btn yum" id="yum-btn">Yum</button>
-            {% if current_user.id == room.HostUserID %}
-            <button id="end-voting-btn" style="display: none;">End Voting</button>
-        {% endif %}
-        </div>
-        <!-- Host-only button -->
-        
-    </section>
+<!-- Voting Buttons -->
+<div class="vote-buttons">
+  <button class="vote-btn ew" id="ew-btn">Ew</button>
+  <button class="vote-btn meh" id="meh-btn">Meh</button>
+  <button class="vote-btn yum" id="yum-btn">Yum</button>
+</div>
+
+<!-- Host-only button -->
+<button id="end-voting-btn" class="button-primary hidden">End Voting</button>
+</section>
 {% endblock %}
 
 {% block scripts %}
 <script>
     const roomId = "{{ room.RoomID }}";
     const userId = {{ current_user.id | default(-1) }};
-    const currentGuestUser = {{ current_guest_user | tojson }};
     const hostUserId = {{ room.HostUserID }};
     const restaurantData = {{ restaurant_data | tojson }};
+    const currentGuestUser = {{ current_guest_user | tojson }};
+    
+    
 </script>
 <script src="{{ url_for('static', filename='js/room_script.js') }}" defer></script>
 {% endblock %}
