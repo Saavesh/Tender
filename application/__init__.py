@@ -9,7 +9,7 @@ from flask import Flask
 from dotenv import load_dotenv
 from flask_security import SQLAlchemyUserDatastore
 # Local/application
-from .extensions import db, cache, migrate, security
+from .extensions import db, cache, migrate, security, mail
 
 
 def create_app(test_config=None):
@@ -26,12 +26,23 @@ def create_app(test_config=None):
         SECURITY_PASSWORD_SALT=os.getenv("SECURITY_PASSWORD_SALT"),
         SECURITY_PASSWORD_HASH="bcrypt",
         SECURITY_REGISTERABLE=True,
-        SECURITY_SEND_REGISTER_EMAIL=False, # Disable email confirmation for simplicity
+        SECURITY_RECOVERABLE = True,# enables /forgot, /reset flows
+        SECURITY_CHANGEABLE = True,# enables /change (when logged in)
+        SECURITY_SEND_REGISTER_EMAIL=False,# Disable email confirmation for simplicity
+        SECURITY_EMAIL_SENDER=os.getenv("SECURITY_EMAIL_SENDER", "no-reply@example.com"),
+        SECURITY_POST_RESET_VIEW = "security.login",# where to go after successful reset
         CACHE_TYPE="SimpleCache",
         CACHE_DEFAULT_TIMEOUT=300,
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        # Mail settings
+        MAIL_BACKEND=os.getenv("MAIL_BACKEND", "console"),
+        MAIL_DEFAULT_SENDER=os.getenv("MAIL_DEFAULT_SENDER", "no-reply@example.com"),
+        MAIL_SERVER=os.getenv("MAIL_SERVER", "localhost"),
+        MAIL_PORT=int(os.getenv("MAIL_PORT", 1025)),
+        MAIL_USE_TLS=os.getenv("MAIL_USE_TLS", "false").lower() == "true",
+        MAIL_USERNAME=os.getenv("MAIL_USERNAME"),
+        MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
     )
-
     # Normalize DB URI (default to instance/site.db for relative sqlite URIs)
     env_uri = os.getenv("SQLALCHEMY_DATABASE_URI")
     if env_uri:
@@ -53,6 +64,7 @@ def create_app(test_config=None):
     # ----- Extensions -----
     db.init_app(app)
     cache.init_app(app)
+    mail.init_app(app)
 
     # Import models before migrate so Alembic sees them
     from .models import User, Role
