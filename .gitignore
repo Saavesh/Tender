@@ -6,17 +6,24 @@ build/
 
 # Virtual environment
 venv/
+.venv/
+env/
 
 #Sensitive files
 .env
-instance/
+.env.*
+instance/*
+!instance/.gitkeep
+*.db
+*.sqlite3
 
-# Python cache files
+# Cache files
 __pycache__/
 .pytest_cache/
 **/cache/
 *.py[cod]
 *.cache
+.cache/
 
 # Test & coverage artifacts
 .coverage
