@@ -35,3 +35,4 @@ __pycache__/
 
 # Miscellaneous - Possibly delete if not needed
 Makefile
+tests/routes_protected.py
