@@ -4,6 +4,7 @@ Flask-SQLAlchemy>=3.1,<4
 SQLAlchemy>=2.0,<2.1
 Flask-Migrate>=4.0,<5
 alembic>=1.13,<2
+setuptools>=75,<81
 
 # Security
 Flask-Security-Too>=5.4,<6
