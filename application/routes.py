@@ -28,6 +28,7 @@ from .models import GuestUser, Restaurant, Room, Vote
 
 
 def register_routes(app):
+
     @cache.memoize(3600)
     def get_restaurant_data(location):
         """Fetches restaurant data from the Google Places API."""
@@ -43,31 +44,30 @@ def register_routes(app):
             "type": "restaurant",
         }
         try:
-            response = requests.get(search_url, params=params, timeout=5)
-            response.raise_for_status()
-            results = response.json().get("results", [])
+            resp = requests.get(search_url, params=params, timeout=5)
+            resp.raise_for_status()
+            results = resp.json().get("results", [])
 
-            formatted_restaurants = []
+            formatted = []
             for place in results[:10]:
                 photo_url = None
-                if "photos" in place and len(place["photos"]) > 0:
+                if place.get("photos"):
                     photo_ref = place["photos"][0]["photo_reference"]
-                    photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={api_key}"
+                    photo_url = (
+                        "https://maps.googleapis.com/maps/api/place/photo"
+                        f"?maxwidth=400&photoreference={photo_ref}&key={api_key}"
+                    )
 
-                formatted_restaurants.append(
-                    {
-                        "id": place.get("place_id"),
-                        "name": place.get("name"),
-                        "image_url": photo_url,
-                        "url": f"https://www.google.com/maps/place/?q=place_id:{place.get('place_id')}",
-                        "categories": [{"title": t} for t in place.get("types", [])],
-                        "price_level": place.get("price_level"),
-                        "review_count": place.get("user_ratings_total", 0),
-                        "rating": place.get("rating", 0),
-                    }
-                )
-            return formatted_restaurants
-
+                formatted.append({
+                    "id": place.get("place_id"),
+                    "name": place.get("name"),
+                    "image_url": photo_url,
+                    "url": f"https://www.google.com/maps/place/?q=place_id:{place.get('place_id')}",
+                    "price_level": place.get("price_level"),
+                    "review_count": place.get("user_ratings_total", 0),
+                    "rating": place.get("rating", 0),
+                })
+            return formatted
         except requests.exceptions.RequestException as e:
             logging.error("Error fetching data from Google Places API: %s", e)
             return []
@@ -241,7 +241,6 @@ def register_routes(app):
                     name=restaurant_data.get("name"),
                     image_url=restaurant_data.get("image_url"),
                     url=restaurant_data.get("url"),
-                    categories=json.dumps(restaurant_data.get("categories", [])),
                     price_level=restaurant_data.get("price_level"),
                     review_count=restaurant_data.get("review_count"),
                     rating=restaurant_data.get("rating"),

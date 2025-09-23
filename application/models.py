@@ -61,7 +61,6 @@ class Restaurant(db.Model):
     name = db.Column(db.String(200), nullable=False)
     image_url = db.Column(db.String(500))
     url = db.Column(db.String(500))
-    categories = db.Column(db.Text)  # JSON string
     price_level = db.Column(db.Integer)
     review_count = db.Column(db.Integer)
     rating = db.Column(db.Float)
@@ -76,7 +75,6 @@ class Restaurant(db.Model):
             "name": self.name,
             "image_url": self.image_url,
             "url": self.url,
-            "categories": json.loads(self.categories) if self.categories else [],
             "price_level": self.price_level,
             "review_count": self.review_count,
             "rating": self.rating,
