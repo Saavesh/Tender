@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% set hide_swipe_cta = true %}
 
 {% block title %}
     Voting Page
@@ -6,63 +7,58 @@
 
 {% block header %}
     <h1>Voting Room</h1>
-    <p>Vote on your favorite restaurant</p>
-    <p>Location: {{ room.Location }}</p>
 {% endblock %}
 
 {% block content %}
 <section class="voting-room">
-    <!-- Guest User List -->
-    <div id="guest-user-list">
-        <h3>Active Voters in the Room</h3>
-        <ul id="guest-list" class="user-row">
-        </ul>
-        <div id="current-user" class="user-avatar">
-            {{ current_guest_user.Username }}
-        </div>
-    </div>
-    
-    <!-- Share button -->
-    <div class="share-container">
-        <p>Invite friends to this room!</p>
-        <button id="share-btn" class="button-secondary">Copy Invite Link</button>
-    </div>
-    
-    <!-- Completion message -->
-    <div id="completion-message" class="hidden">
-        <p>Voting complete! Please wait for the host to finalize the results.</p>
-    </div>
 
-<!-- Central restaurant information card -->
-<div class="restaurant-info" id="restaurant-info">
-  <h3 id="restaurant-name"></h3>
-  <img id="restaurant-image" src="" alt="Restaurant image">
-  <p id="restaurant-rating"></p>
-  <p id="restaurant-price"></p>
-  <p id="restaurant-description"></p>
-</div>
+  <!-- Active voters rail -->
+  <div class="voter-rail">
+    <ul id="guest-list" class="voter-rail-list"></ul>
+    <div id="current-user" class="user-avatar">{{ current_guest_user.Username }}</div>
+  </div>
 
-<!-- Voting Buttons -->
-<div class="vote-buttons">
-  <button class="vote-btn ew" id="ew-btn">Ew</button>
-  <button class="vote-btn meh" id="meh-btn">Meh</button>
-  <button class="vote-btn yum" id="yum-btn">Yum</button>
-</div>
+  <!-- Invite chip (centered) -->
+  <div class="share-pill">
+    <button id="share-btn" class="chip">Invite to this room</button>
+  </div>
 
-<!-- Host-only button -->
-<button id="end-voting-btn" class="button-primary hidden">End Voting</button>
+  <!-- Completion area (appears only when voting is done) -->
+  <div id="completion" class="completion hidden">
+    <div class="completion-badge">
+      Voting complete! Please wait for the host to finalize the results.
+    </div>
+    <button id="end-voting-btn" class="button-primary hidden">End voting</button>
+  </div>
+
+  <!-- Central restaurant information card -->
+  <div class="restaurant-info" id="restaurant-info">
+    <h3 id="restaurant-name"></h3>
+    <img id="restaurant-image" src="" alt="Restaurant image">
+    <p id="restaurant-rating"></p>
+    <p id="restaurant-price"></p>
+  </div>
+
+  <!-- Voting Buttons -->
+  <div class="vote-buttons">
+    <button class="vote-btn ew"  id="ew-btn">Ew</button>
+    <button class="vote-btn meh" id="meh-btn">Meh</button>
+    <button class="vote-btn yum" id="yum-btn">Yum</button>
+  </div>
+
 </section>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    const roomId = "{{ room.RoomID }}";
-    const userId = {{ current_user.id | default(-1) }};
-    const hostUserId = {{ room.HostUserID }};
-    const restaurantData = {{ restaurant_data | tojson }};
-    const currentGuestUser = {{ current_guest_user | tojson }};
-    
-    
+  // Make page data available to room_script.js
+  window.roomId           = "{{ room.RoomID }}";
+  window.userId           = {{ current_user.id | default(-1) }};
+  window.hostUserId       = {{ room.HostUserID }};
+  window.restaurantData   = {{ restaurant_data | tojson }};
+  window.currentGuestUser = {{ current_guest_user | tojson }};
 </script>
-<script src="{{ url_for('static', filename='js/room_script.js') }}" defer></script>
+
+<!-- External JS (cache-busted so updates load) -->
+<script src="{{ url_for('static', filename='js/room_script.js') }}?v=10" defer></script>
 {% endblock %}

@@ -24,10 +24,13 @@
             </div>
 
             <!-- "Start Swiping Now!" Button -->
-            {% if current_user.is_authenticated %}
+            {% if current_user.is_authenticated and request.endpoint != 'room' %}
             <a href="{{ url_for('rooms') }}" class="start_swipe-button">Start Swiping Now!</a>
             {% endif %}
         {% endif %}
+
+        <!-- Placeholder for page-specific header content -->
+        {% block header %}{% endblock %}
     
         <!-- Navigation Section -->
         <nav>
