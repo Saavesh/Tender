@@ -11,12 +11,9 @@ from flask_security import SQLAlchemyUserDatastore
 # Local/application
 from .extensions import db, cache, migrate, security, mail
 
-
 def create_app(test_config=None):
     load_dotenv()
-
     app = Flask(__name__, instance_relative_config=True)
-
     # Ensure instance folder exists (for SQLite file))
     os.makedirs(app.instance_path, exist_ok=True)
 
@@ -42,6 +39,7 @@ def create_app(test_config=None):
         MAIL_USE_TLS=os.getenv("MAIL_USE_TLS", "false").lower() == "true",
         MAIL_USERNAME=os.getenv("MAIL_USERNAME"),
         MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
+        MAIL_SUPPRESS_SEND=os.getenv("MAIL_SUPPRESS_SEND", "1") == "1",
     )
     # Normalize DB URI (default to instance/site.db for relative sqlite URIs)
     env_uri = os.getenv("SQLALCHEMY_DATABASE_URI")
@@ -64,18 +62,18 @@ def create_app(test_config=None):
     # ----- Extensions -----
     db.init_app(app)
     cache.init_app(app)
-    mail.init_app(app)
+    if mail:
+        mail.init_app(app)
 
     # Import models before migrate so Alembic sees them
     from .models import User, Role
-
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+
     migrate.init_app(app, db)
     security.init_app(app, user_datastore)
 
     # ----- Routes -----
     from .routes import register_routes
-
     register_routes(app)
 
     # ----- Logging -----
