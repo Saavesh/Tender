@@ -1,14 +1,13 @@
 # tests/conftest.py
 import os
 import sys
+from application import create_app
+from application.extensions import db
 import pytest
 from sqlalchemy.pool import StaticPool
 
 # Make sure the app package is importable
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from application import create_app
-from application.extensions import db
 
 
 @pytest.fixture(scope="session")
@@ -17,6 +16,7 @@ def app():
         "TESTING": True,
         "PROPAGATE_EXCEPTIONS": False,   # let error handlers run in tests
         "WTF_CSRF_ENABLED": False,
+        "MAIL_SUPPRESS_SEND": True,
         "CACHE_TYPE": "NullCache",
         "SQLALCHEMY_DATABASE_URI": "sqlite://",  # in-memory
         "SQLALCHEMY_ENGINE_OPTIONS": {
@@ -25,6 +25,8 @@ def app():
         },
         "SECURITY_SEND_REGISTER_EMAIL": False,
         "SECRET_KEY": "testing-secret",
+        "SECURITY_PASSWORD_HASH": "plaintext",
+        "SECURITY_PASSWORD_SALT": "testing-salt",
     })
     with app.app_context():
         db.create_all()
