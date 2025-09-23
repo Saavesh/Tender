@@ -12,7 +12,12 @@ env/
 #Sensitive files
 .env
 .env.*
+# SQLite DBs & backups
+instance/*.db
+instance/*.db-*
+instance/*.db.bak*
 instance/*
+backups/
 !instance/.gitkeep
 *.db
 *.sqlite3
