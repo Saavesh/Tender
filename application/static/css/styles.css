@@ -545,15 +545,6 @@ form, .form-container{
     width: 100%;
 }
 
-/* User avatars in a row */
-.user-row {
-    display: flex;
-    justify-content: center;
-    gap: 0px;
-    margin-bottom: .5em;
-    padding: 0;
-    list-style-type: none;
-}
 
 .room-topbar{
   width: min(1100px, 92vw);
@@ -802,112 +793,101 @@ form, .form-container{
     grid-template-columns: 1fr 1fr; /* Two equal columns */
     align-items: stretch;
     justify-items: center;
-    gap: 2rem;
+    gap: 1rem;
 }
 
-./* Theme hues for the rings */
+/* Theme hues for the rings */
 :root{
-  --group-a:#22d3ee;
-  --group-b:#6366f1;
+  --group-a:#ee2222;
+  --group-b:#683830;
   --rest-a:#ff7a59;
   --rest-b:#ec4899;
 }
-
-/* Base circle card style */
-.profile-card{
+/* Circle card used ONLY on results page */
+.match-card {
   position: relative;
-  width: 280px;
-  height: 280px;
+  width: clamp(220px, 28vw, 340px);
+  height: clamp(220px, 28vw, 340px);
   border-radius: 50%;
   overflow: hidden;
 
-  /* glassy interior */
   background: linear-gradient(145deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255,255,255,.16);
-  box-shadow:
-    0 20px 60px rgba(0,0,0,.35),         
-    inset 0 1px 0 rgba(255,255,255,.25);
+  box-shadow: 0 20px 60px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.25);
 
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  align-items:center;
-  padding:1rem;
-  text-align:center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  text-align: center;
 }
 
-/* Neon ring outside the circle */
-.profile-card::before{
-  content:"";
-  position:absolute;
-  inset:-10px;                  /* push the ring outside the circle */
-  border-radius:50%;
-  z-index:-1;
+/* Neon ring */
+.match-card::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  z-index: -1;
   filter: blur(12px) saturate(120%);
-  opacity:.95;
+  opacity: .95;
   background: conic-gradient(from 220deg, var(--ring-a), var(--ring-b), var(--ring-a));
 }
 
 /* Soft inner sheen */
-.profile-card::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:50%;
-  pointer-events:none;
+.match-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
   background: radial-gradient(ellipse at 35% 30%, rgba(255,255,255,.28), transparent 60%);
 }
 
-/* Per-card colors for the glow ring */
-.profile-card.group-card{
-  --ring-a: var(--group-a);
-  --ring-b: var(--group-b);
-}
-.profile-card.restaurant-card{
-  --ring-a: var(--rest-a);
-  --ring-b: var(--rest-b);
-}
+/* Per-card ring colors */
+.match-card.group-card    { --ring-a: var(--group-a); --ring-b: var(--group-b); }
+.match-card.restaurant-card{ --ring-a: var(--rest-a);  --ring-b: var(--rest-b); }
 
-/* Image/avatars inside the circle */
-.profile-card .profile-image-container{
-  width:165px;
-  height:165px;
-  border-radius:50%;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-bottom:.35rem;
-  border:3px solid rgba(255,255,255,.85);
+/* Photo inside the restaurant card */
+.match-card__photo {
+  width: 65%;
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  object-fit: cover;
+  display: block;
+  border: 2px solid rgba(255,255,255,.85);
   box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
-.profile-card.group-card .profile-image-container{
-  box-shadow: 0 10px 30px rgba(34,211,238,.45); /* cyan glow */
-}
-.profile-card.restaurant-card .profile-image-container{
-  box-shadow: 0 10px 30px rgba(236,72,153,.45); /* pink glow */
-}
-.profile-card .profile-image-container img{
-  width:120%;
-  height:120%;
-  object-fit:cover;
-  border-radius:50%;
-}
-/* Typography inside cards (high contrast on glass) */
-.profile-card h3{
-  font-size:1.25rem;
-  color:#111827;
-  margin-bottom:.25rem;
-}
-.profile-card p{
-  color:#1f2937;
-  opacity:.85;
+
+/* Text inside the cards */
+.match-card__title {
+  margin: .25rem 0 0;
+  font-weight: 700;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  line-height: 1.2;
+  max-width: 85%;
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;      /* clamp title to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.card-content {
-    flex-grow: 1;
+.match-card__meta {
+  margin: 0;
+  font-size: clamp(.9rem, 2vw, 1.05rem);
+  line-height: 1.2;
+  max-width: 85%;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;      /* single-line meta */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: .9;
 }
 
 /* Action buttons at the bottom */
