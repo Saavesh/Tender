@@ -13,37 +13,41 @@
     <div id="match-content" class="match-content hidden">
         <h1 class="match-header">It's a Match!</h1>
 
-        <div class="match-cards-container">
-            <div class="profile-card group-card">
-                <div class="avatar-stack">
-                    {% for guest in room.guests %}
-                    <div class="stacked-avatar" title="{{ guest.Username }}">
-                        {{ guest.Username[0] | upper }}
-                    </div>
-                    {% endfor %}
-                </div>
-                <h3>Your Group</h3>
-                <p>{{ room.Location }}</p>
-            </div>
+<div class="match-cards-container">
+  <!-- GROUP CARD -->
+  <div class="group-card match-card">
+    <div class="avatar-stack">
+      {% for guest in room.guests %}
+      <div class="stacked-avatar" title="{{ guest.Username }}">
+        {{ guest.Username[0] | upper }}
+      </div>
+      {% endfor %}
+    </div>
+    <h3 class="match-card__title">Your Group</h3>
+    <p class="match-card__meta">{{ room.Location }}</p>
+  </div>
 
-            {% if winning_restaurant %}
-            <div class="profile-card restaurant-card">
-                <div class="card-content">
-                    <div class="profile-image-container">
-                        <img src="{{ winning_restaurant.image_url }}" alt="Image of {{ winning_restaurant.name }}">
-                    </div>
-                    <h3>{{ winning_restaurant.name }}</h3>
-                    <p>⭐ {{ winning_restaurant.rating }} ({{ winning_restaurant.review_count }} reviews)</p>
-                    <p>Price: {{ '$' * winning_restaurant.price_level if winning_restaurant.price_level else 'N/A' }}</p>
-                </div>
-            </div>
-            {% else %}
-            <div class="profile-card restaurant-card">
-                <h3>No Clear Winner</h3>
-                <p>Looks like it was a tough choice!</p>
-            </div>
-            {% endif %}
-        </div>
+  <!-- RESTAURANT CARD -->
+  {% if winning_restaurant %}
+  <div class="restaurant-card match-card">
+    <img
+      class="match-card__photo"
+      src="{{ winning_restaurant.image_url }}"
+      alt="Image of {{ winning_restaurant.name }}"
+    >
+    <h3 class="match-card__title">{{ winning_restaurant.name }}</h3>
+    <p class="match-card__meta">⭐ {{ winning_restaurant.rating }} ({{ winning_restaurant.review_count }} reviews)</p>
+    <p class="match-card__meta">
+      Price: {{ '$' * winning_restaurant.price_level if winning_restaurant.price_level else 'N/A' }}
+    </p>
+  </div>
+  {% else %}
+  <div class="restaurant-card match-card">
+    <h3 class="match-card__title">No Clear Winner</h3>
+    <p class="match-card__meta">Looks like it was a tough choice!</p>
+  </div>
+  {% endif %}
+</div>
 
         <div class="results-actions">
             {% if winning_restaurant %}
