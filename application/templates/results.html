@@ -30,16 +30,17 @@
   <!-- RESTAURANT CARD -->
   {% if winning_restaurant %}
   <div class="restaurant-card match-card">
-    <img
-      class="match-card__photo"
-      src="{{ winning_restaurant.image_url }}"
-      alt="Image of {{ winning_restaurant.name }}"
-    >
-    <h3 class="match-card__title">{{ winning_restaurant.name }}</h3>
-    <p class="match-card__meta">⭐ {{ winning_restaurant.rating }} ({{ winning_restaurant.review_count }} reviews)</p>
-    <p class="match-card__meta">
-      Price: {{ '$' * winning_restaurant.price_level if winning_restaurant.price_level else 'N/A' }}
-    </p>
+    <div 
+      class="card-image-half" 
+      style="background-image: url('{{ winning_restaurant.image_url }}')"
+    ></div>
+    <div class="card-text-half">
+      <h3 class="match-card__title">{{ winning_restaurant.name }}</h3>
+      <p class="match-card__meta">⭐ {{ winning_restaurant.rating }} ({{ winning_restaurant.review_count }} reviews)</p>
+      <p class="match-card__meta">
+        Price: {{ '$' * winning_restaurant.price_level if winning_restaurant.price_level else 'N/A' }}
+      </p>
+    </div>
   </div>
   {% else %}
   <div class="restaurant-card match-card">
@@ -60,7 +61,7 @@
         
         <div id="voting-summary" class="voting-summary hidden">
             <h2 class="animated-subtitle">Voting Summary</h2>
-            <table class="voting-summary-table">
+            <table class="summary-table">
                 <thead>
                     <tr>
                         <th>User</th>

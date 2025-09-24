@@ -212,7 +212,6 @@ nav ul li a {
     transition: transform 0.2s ease, background-color 0.3s ease;
 }
 
-.vote-btn.disabled,
 .vote-btn:disabled { opacity: 0.5; pointer-events: none; }
 .vote-btn:hover { transform: scale(1.1); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); }
 .vote-btn:active { transform: scale(0.95); box-shadow: none; }
@@ -407,7 +406,7 @@ form, .form-container{
     background: #ff6f61;
     color: white;
     text-transform: uppercase;
-    padding: 1rem;
+    padding: 0.75rem;
     text-align: left;
 }
 
@@ -545,35 +544,6 @@ form, .form-container{
     width: 100%;
 }
 
-
-.room-topbar{
-  width: min(1100px, 92vw);
-  margin: .75rem auto 0;
-  padding: .35rem .75rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: .75rem;
-
-  /* subtle glass over the gradient */
-  background: rgba(255,255,255,.10);
-  border: 1px solid rgba(255,255,255,.22);
-  border-radius: 14px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 10px 20px rgba(0,0,0,.12) inset;
-}
-
-/* Compact, horizontal queue of voters */
-.queue{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  overflow-x: auto;
-}
 .queue .user-avatar{
   width: 36px;
   height: 36px;
@@ -604,7 +574,7 @@ form, .form-container{
   box-shadow: 0 6px 14px rgba(0,0,0,.15);
 }
 
-/* Completion banner */
+/* Completion banner
 .banner{
   width: min(680px, 92vw);
   margin: .5rem auto 0;
@@ -614,27 +584,7 @@ form, .form-container{
   border: 1px solid rgba(16,185,129,.28);
   border-radius: 10px;
   font-weight: 600;
-}
-
-/* Floating End Voting button (host-only, appears when done) */
-.fab{
-  position: fixed;
-  right: clamp(12px, 3vw, 28px);
-  bottom: clamp(12px, 3vw, 28px);
-  padding: .9rem 1.25rem;
-  border: 0;
-  border-radius: 14px;
-  font-weight: 700;
-  background: linear-gradient(135deg, #ff6b6b, #f06595);
-  color: #fff;
-  box-shadow: 0 18px 28px rgba(240,101,149,.35), 0 6px 10px rgba(0,0,0,.15);
-  cursor: pointer;
-  transition: transform 120ms ease, box-shadow 120ms ease, opacity 180ms ease;
-  z-index: 50;
-}
-.fab:hover{ transform: translateY(-1px); box-shadow: 0 22px 36px rgba(240,101,149,.45); }
-.fab:active{ transform: translateY(0);    box-shadow: 0 12px 22px rgba(240,101,149,.35); }
-
+} */
 
 .restaurant-info{
   background: rgba(255,255,255,.14);
@@ -675,7 +625,7 @@ form, .form-container{
   gap: 14px;
 }
 
-@media (max-width: 720px){
+@media (max-width: 700px){
   .room-topbar{ flex-wrap: wrap; gap: .5rem; }
   .chip{ order: 2; }
   .queue{ order: 1; width: 100%; }
@@ -771,9 +721,6 @@ form, .form-container{
 
 
 /* ////////////////--- Results Page---///////////////// */
-/* ==========================================================================
-   Results Page Styles
-   ========================================================================== */
 .results-container {
     max-width: 900px;
     margin: 0 auto;
@@ -796,18 +743,14 @@ form, .form-container{
     gap: 1rem;
 }
 
-/* Theme hues for the rings */
-:root{
-  --group-a:#ee2222;
-  --group-b:#683830;
-  --rest-a:#ff7a59;
-  --rest-b:#ec4899;
-}
+
 /* Circle card used ONLY on results page */
 .match-card {
+  --ring-a: #ee2222;
+  --ring-b: #683830cf;  
   position: relative;
-  width: clamp(220px, 28vw, 340px);
-  height: clamp(220px, 28vw, 340px);
+  width: clamp(280px, 35vw, 420px);
+  height: clamp(280px, 35vw, 420px);
   border-radius: 50%;
   overflow: hidden;
 
@@ -819,11 +762,30 @@ form, .form-container{
 
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
-  padding: 16px;
+  gap: 0px;
+  padding: 0px;
   text-align: center;
+}
+/* The top half of the card, used for the background image */
+.card-image-half {
+  width: 150%;
+  flex: 2; /* Take up half the vertical space */
+  background-size: cover;
+  background-position: center;
+}
+
+/* The bottom half of the card, for the text content */
+.card-text-half {
+  width: 100%;
+  flex: 1; /* Makes it take up the other half */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box; /* Ensure padding is included in the height */
 }
 
 /* Neon ring */
@@ -847,28 +809,14 @@ form, .form-container{
   background: radial-gradient(ellipse at 35% 30%, rgba(255,255,255,.28), transparent 60%);
 }
 
-/* Per-card ring colors */
-.match-card.group-card    { --ring-a: var(--group-a); --ring-b: var(--group-b); }
-.match-card.restaurant-card{ --ring-a: var(--rest-a);  --ring-b: var(--rest-b); }
-
-/* Photo inside the restaurant card */
-.match-card__photo {
-  width: 65%;
-  aspect-ratio: 1 / 1;
-  border-radius: 999px;
-  object-fit: cover;
-  display: block;
-  border: 2px solid rgba(255,255,255,.85);
-  box-shadow: 0 10px 30px rgba(0,0,0,.25);
-}
-
 /* Text inside the cards */
 .match-card__title {
-  margin: .25rem 0 0;
-  font-weight: 700;
-  font-size: clamp(1rem, 2.5vw, 1.5rem);
-  line-height: 1.2;
-  max-width: 85%;
+  margin: 0rem 0 0;
+  color: #111;
+  font-weight: 1000;
+  font-size: clamp(1.2rem, 2.7vw, 1.7rem);
+  line-height: 1.4;
+  max-width: 90%;
   display: -webkit-box;
 
   -webkit-line-clamp: 2;      /* clamp title to 2 lines */
@@ -879,9 +827,10 @@ form, .form-container{
 
 .match-card__meta {
   margin: 0;
-  font-size: clamp(.9rem, 2vw, 1.05rem);
-  line-height: 1.2;
-  max-width: 85%;
+  font-weight: bold;
+  font-size: clamp(1.1rem, 2.2vw, 1.25rem);
+  line-height: 1.4;
+  max-width: 90%;
   display: -webkit-box;
   -webkit-line-clamp: 1;      /* single-line meta */
   -webkit-box-orient: vertical;
@@ -930,6 +879,30 @@ form, .form-container{
 
 .voting-summary {
     margin-top: 2rem;
+}
+
+/* Smaller text on narrow screens */
+@media (max-width: 700px){
+  .match-card__title { font-size: clamp(.95rem, 2.2vw, 1.3rem); }
+  .match-card__meta  { font-size: clamp(.85rem, 2vw, 1rem); }
+}
+
+@media (min-width: 1100px) {
+  .match-cards-container { gap: 2.5rem; }
+
+  .match-card {
+    width:  clamp(320px, 26vw, 400px);
+    height: clamp(320px, 26vw, 400px);
+    padding: 24px;
+    gap: 14px;
+  }
+
+  /* roomier line-height and slightly adjusted sizes */
+  .match-card__title { font-size: clamp(1rem, 2vw, 1.6rem); line-height: 1.3; }
+  .match-card__meta  { font-size: clamp(.95rem, 1.6vw, 1.1rem); line-height: 1.3; }
+
+  /* extra space between rating and price rows */
+  .match-card__meta + .match-card__meta { margin-top: .4rem; }
 }
 
 
