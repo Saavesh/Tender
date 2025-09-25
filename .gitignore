@@ -12,6 +12,8 @@ env/
 #Sensitive files
 .env
 .env.*
+!.env.example
+
 # SQLite DBs & backups
 instance/*.db
 instance/*.db-*
@@ -34,5 +36,4 @@ __pycache__/
 .coverage
 
 # Miscellaneous - Possibly delete if not needed
-Makefile
 tests/routes_protected.py
